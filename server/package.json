@@ -1,0 +1,17 @@
+{
+  "name": "bun-express",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.5.0",
+    "@types/express": "^5.0.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "prisma": "^6.5.0",
+    "redis": "^4.7.0"
+  }
+}

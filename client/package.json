@@ -1,0 +1,22 @@
+{
+  "name": "client",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build:tailwind": "bunx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./dist/tailwind-output.css --watch",
+    "build:js": "bunx tsc -i ./styles/tailwind-input.css -o ./dist/tailwind-output.css --watch"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.4"
+  }
+}
