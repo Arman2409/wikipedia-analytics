@@ -1,1 +1,20 @@
+@import "tailwindcss/preflight"; /* replaces @tailwind base */
+@import "tailwindcss/utilities"; /* replaces both @tailwind components + utilities */
 @import "tailwindcss";
+
+@theme {
+    --color-primary: #a2d4fc;
+
+    --color-secondary: #495a9f;
+
+    --color-background: #FAFAFA;
+
+    --color-text :#a7d12f;
+
+    --color-accent: #ffda25;
+}
+
+body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
