@@ -1,22 +1,35 @@
 import express from "express";
 import dotenv from "dotenv";
 
-import wikiRouter from "./routes/wikiRoutes";
+import loggingMiddleware from "./middlewares/loggingMiddleware";
+import notFoundMiddleware from "./middlewares/notFoundMiddleware";
+import logger from "./services/logger";
+import { DEFAULT_PORT } from "./configs/configs";
+import { getViewsController } from "./controllers/wikiControllers";
 
 dotenv.config();
 
 const app = express();
 
-// app.use(express.json());
+// Middlewares
+app.use(loggingMiddleware);
 
-app.get("/", (_ , res) => {
+
+// Routes
+app.get("/", (_, res) => {
     res.send("Server running!")
 });
 
-app.use("/", wikiRouter);
+app.get("/get_views", getViewsController);
 
-const port =  process.env.PORT || 3030;
+
+// Catch-all middleware
+app.use(notFoundMiddleware);
+
+
+// Starting the server
+const port = process.env.PORT || DEFAULT_PORT;
 
 app.listen(port, () => {
-    console.log(`Server listening to port: ${port}`);
+    logger.info(`Server listening to port: ${port}`);
 })
