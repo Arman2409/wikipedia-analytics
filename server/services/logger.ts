@@ -48,8 +48,8 @@ class Logger {
     this.logger.info(message, {noTimestamp});
   }
 
-  public error(message: string): void {
-    this.logger.error(message);
+  public error(message: string, error?: Error): void {
+    this.logger.error(`${message}${error ? `, error: ${error}` : ""}`);
   }
 
   public warn(message: string): void {
