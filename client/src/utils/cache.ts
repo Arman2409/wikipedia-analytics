@@ -2,11 +2,12 @@ import { CACHE_DEFAULT_TTL } from "../configs/configs";
 
 export interface LocalStorageCache {
     set(key: string, value: unknown, ttlMinutes: number, identificator?: string): void;
-    get<T = any>(key: string, identificator?: string): T | null;
+    get<T = unknown>(key: string, identificator?: string): T | null;
     remove(key: string, identificator?: string): void;
     clear(): void;
 }
 
+// TODO This should be in another place 
 export class LocalStorageCache {
     constructor(private prefix = 'app_') { }
 
@@ -31,7 +32,7 @@ export class LocalStorageCache {
         localStorage.setItem(itemKey, JSON.stringify(wrapped));
     }
 
-    get<T = any>(
+    get<T = unknown>(
         key: string,
         identificator?: string
     ): T | null {
