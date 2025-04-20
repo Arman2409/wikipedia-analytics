@@ -1,23 +1,29 @@
 import redis, { type RedisClientType } from "redis";
 
 import { DEFAULT_TTL_IN_MINUTES } from "../configs/configs";
+import { safeParse } from "../utils/helpers";
 
-export class RedisClient {
-    private instance: RedisClientType | undefined;
+interface RedisClient {
+    set(key: string, value: unknown, identificator?: string, ttlInMinutes?: number): Promise<void>;
+    remove(key: string, identificator?: string): Promise<void>;
+    disconnect(): Promise<void>;
+}
+
+class RedisClient {
+    static instance: RedisClient | undefined;
+    private redisClient: RedisClientType | undefined;
 
     private constructor() {
-        if (!this.instance) {
-            this.instance = redis.createClient({
+        if (!this.redisClient) {
+            this.redisClient = redis.createClient({
                 url: process.env.REDIS_URL,
             });;
         }
     }
 
-    async getInstance(): Promise<RedisClientType> {
+    static getInstance(): RedisClient {
         if (!this.instance) {
-            this.instance = redis.createClient({
-                url: process.env.REDIS_URL,
-            });
+            this.instance = new RedisClient();
         }
 
         return this.instance;
@@ -26,17 +32,17 @@ export class RedisClient {
     private getStorageKey(
         key: string,
         identificator?: string
-    ):string {
+    ): string {
         return key + (identificator ? `_${identificator}` : '');
     }
 
     async set(
         key: string,
         value: unknown,
-        identificator?: string,
+        identificator?: string|number,
         ttlInMinutes: number = DEFAULT_TTL_IN_MINUTES
     ): Promise<void> {
-        if (!this.instance) {
+        if (!this.redisClient) {
             console.warn("Redis not connected!");
             return;
         }
@@ -44,7 +50,7 @@ export class RedisClient {
         const storageKey = this.getStorageKey(key, identificator);
 
         try {
-            await this.instance.set(
+            await this.redisClient.set(
                 storageKey,
                 JSON.stringify(value),
                 {
@@ -56,11 +62,33 @@ export class RedisClient {
         }
     }
 
+    async get<T = unknown>(
+        key: string,
+        identificator?: string|number,
+    ): Promise<T | void> {
+        if (!this.redisClient) {
+            console.warn("Redis not connected!");
+            return;
+        }
+
+        try {
+            const storageKey = this.getStorageKey(key, identificator);
+
+            const result = await this.redisClient.get(storageKey);
+            if (!result) return;
+
+            return safeParse(result);
+        } catch (err) {
+            console.error("Failed to set value in Redis", err);
+        }
+    }
+
+
     async remove(
         key: string,
         identificator?: string,
     ): Promise<void> {
-        if (!this.instance) {
+        if (!this.redisClient) {
             console.warn("Redis not connected!");
             return;
         }
@@ -68,16 +96,16 @@ export class RedisClient {
         const storageKey = this.getStorageKey(key, identificator);
 
         try {
-            await this.instance.del(storageKey);
+            await this.redisClient.del(storageKey);
         } catch (err) {
             console.error("Failed to set value in Redis", err);
         }
     }
 
-    async disconnect(): Promise<void>  {
-        if (this.instance) {
+    async disconnect(): Promise<void> {
+        if (this.redisClient) {
             try {
-                await this.instance.disconnect();
+                await this.redisClient.disconnect();
             } catch (err) {
                 console.warn("Failed to disconnect");
             }
@@ -86,3 +114,5 @@ export class RedisClient {
         }
     }
 }
+
+export default RedisClient.getInstance();

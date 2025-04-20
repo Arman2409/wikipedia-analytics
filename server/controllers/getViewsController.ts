@@ -2,9 +2,9 @@ import type { Request, Response } from "express";
 
 import { ErrorMessage, StatusCode } from "../constants/response";
 import { handleGetViewsQueryValidation } from "./utils/validation";
-import { getViewsHandler } from "../handlers/wikiHandlers";
+import getViewsModel from "../models/getViewsModel";
 
-export const getViewsController = async (
+const getViewsController = async (
     req: Request,
     res: Response) => {
 
@@ -16,10 +16,14 @@ export const getViewsController = async (
             return;
         }
 
-        getViewsHandler(validationResult, res);
+        getViewsModel(validationResult, res);
     } catch (err) {
         console.warn(`${ErrorMessage.FAILED_TO_GET_VIEWS}: ${err}`);
 
-        res.status(StatusCode.INTERNAL_SERVER_ERROR).send(ErrorMessage.FAILED_TO_GET_VIEWS);
+        res.status(StatusCode.INTERNAL_SERVER_ERROR).json({
+            error: ErrorMessage.FAILED_TO_GET_VIEWS
+        });
     }
 }
+
+export default getViewsController;

@@ -1,9 +1,9 @@
 import type { Response } from "express";
 
 import { ErrorMessage, StatusCode } from "../../constants/response";
-import { isNonEmptyString, isPositiveInteger } from "../../utils/type-guards";
+import { isNonEmptyString, isPositiveInteger } from "../../utils/typeGuards";
 import { periodsMap } from "./periods";
-import type { GetPageViewsPayload } from "../../types/get_views";
+import type { GetPageViewsPayload } from "../../types/getViews";
 
 
 export const handleGetViewsQueryValidation = (
@@ -30,7 +30,7 @@ export const handleGetViewsQueryValidation = (
     const granularity = periodsMap.get(period);
 
     if (!granularity) {
-        res.status(StatusCode.BAD_REQUEST).send(
+        res.status(StatusCode.BAD_REQUEST).json(
             { error: `Period not allowed. Allowed periods are: ${Array.from(periodsMap.keys()).join(", ")}` }
         );
         return;

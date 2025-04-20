@@ -2,16 +2,27 @@ import type { Response } from "express";
 
 import { ErrorMessage, StatusCode } from "../constants/response";
 import RequestHandler from "../services/request";
+import redis from "../services/redis";
 import logger from "../services/logger";
-import type { GetPageViewsPayload } from "../types/get_views";
 import { transformPageViews } from "./utils/helpers";
+import type { GetPageViewsPayload } from "../types/getViews";
 
-
-export const getViewsHandler = async (
+const getViewsModel = async (
     validationResult: GetPageViewsPayload,
-    res: Response
+    res: Response,
 ) => {
     try {
+        const { name, period } = { ...validationResult };
+
+        // Check the cache for requested data
+        const cachedResult = await redis.get(name, period);
+
+        if(cachedResult) {
+            res.status(StatusCode.OK).json(cachedResult);
+            return;
+        }
+
+        // Retrieve the data 
         const result = await RequestHandler.getPageData(validationResult);
 
         if (!result?.items) {
@@ -21,7 +32,11 @@ export const getViewsHandler = async (
             return;
         }
 
-        const data = transformPageViews(result.items, validationResult.period)
+        // Update cache of needed
+        const data = transformPageViews(result.items, validationResult.period);
+
+        redis.set(name, data, period);
+
 
         res.status(StatusCode.OK).json(data);
     } catch (err) {
@@ -32,3 +47,5 @@ export const getViewsHandler = async (
         });
     }
 }
+
+export default getViewsModel;

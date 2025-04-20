@@ -1,64 +1,30 @@
-import { format } from 'morgan';
-import winston from 'winston';
+import chalk from 'chalk';
 
 class Logger {
-  private static instance: Logger | null = null;
-  private logger: winston.Logger;
-
-  private constructor() {
-    if (Logger.instance) {
-      throw new Error('Cannot create new instance. Use Logger.getInstance()');
-    }
-    this.logger = winston.createLogger({
-      level: 'info',
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        winston.format.printf(({ timestamp, level, message }) => {
-          return `${timestamp} ${level}: ${message}`;
-        }),
-      ),
-      transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({ filename: 'app.log' })
-      ]
-    });
+  private getTimestamp() {
+    return new Date().toISOString();
   }
 
-  public static getInstance(): Logger {
-    if (!Logger.instance) {
-      Logger.instance = new Logger();
-    }
-    return Logger.instance;
+  public info(message: string) {
+    const log = `[${chalk.gray(this.getTimestamp())}] ${chalk.green('INFO')}: ${message}`;
+    console.log(log);
   }
 
-  public info(
-    message: string,
-    noTimestamp: boolean = false
-): void {
-    // if(noTimestamp) {
-    //     this.logger.info(message, {
-    //         format: winston.format.printf(({ level, message }) => {
-    //             return `${level}: ${message}`;
-    //         })
-    //     });
-    //     return;
-    // }
-
-    this.logger.info(message, {noTimestamp});
+  public error(message: string, err?: Error) {
+    const errorDetails = err ? `${message}, Error: ${err.message}` : message;
+    const log = `[${chalk.gray(this.getTimestamp())}] ${chalk.redBright('ERROR')}: ${errorDetails}`;
+    console.log(log);
   }
-
-  public error(message: string, error?: Error): void {
-    this.logger.error(`${message}${error ? `, error: ${error}` : ""}`);
+  
+  public warn(message: string) {
+    const log = `[${chalk.gray(this.getTimestamp())}] ${chalk.yellowBright('WARN')}: ${message}`;
+    console.log(log);
   }
-
-  public warn(message: string): void {
-    this.logger.warn(message);
-  }
-
-  public debug(message: string): void {
-    this.logger.debug(message);
+  
+  public debug(message: string) {
+    const log = `[${chalk.gray(this.getTimestamp())}] ${chalk.cyanBright('DEBUG')}: ${message}`;
+    console.log(log);
   }
 }
 
-export default Logger.getInstance();
+export default new Logger();

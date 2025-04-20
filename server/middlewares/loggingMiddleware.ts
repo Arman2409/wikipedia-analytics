@@ -15,7 +15,7 @@ const loggingMiddleware = (
     const userAgent = req.get('User-Agent') || '-';
 
     // Format log message
-    const logMessage = `"${method} ${url}" "${remoteAddr}" "${referrer}" "${userAgent}"`;
+    const logMessage = `"${method}" "${url}" "${remoteAddr}" "${referrer}" "${userAgent}"`;
 
     logger.info(logMessage);
 
