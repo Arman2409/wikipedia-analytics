@@ -2,13 +2,13 @@ import axios, { type AxiosInstance } from 'axios';
 
 import { BASE_API_URL, WIKIPEDIA_API_URL } from '../configs/configs';
 
-interface Request {
+interface RequestHandler {
     getPageData(name: string, period: string): Promise<unknown[]>;
     getPageSuggestions(query: string): Promise<string[]>;
 }
 
-class Request {
-    static instance: Request | null = null;
+class RequestHandler {
+    static instance: RequestHandler | null = null;
     private axiosInstance: AxiosInstance;
 
     private constructor() {
@@ -16,30 +16,32 @@ class Request {
             baseURL: BASE_API_URL,
         });
 
+        this.axiosInstance.defaults.maxRedirects = 0;
+
         console.log(this.axiosInstance.interceptors.response);
         
         console.log("Request class initialized with:", BASE_API_URL);
     }
 
-    static getInstance(): Request {
-        if (!Request.instance) {
-            Request.instance = new Request();
+    static getInstance(): RequestHandler {
+        if (!RequestHandler.instance) {
+            RequestHandler.instance = new RequestHandler();
         }
-        return Request.instance;
+        return RequestHandler.instance;
     }
 
     async getPageData(
         name: string, 
         period: string
-    ) {
+    ): Promise<any> {
         try {
             const getViewParams = new URLSearchParams();
             getViewParams.set("name", name);
             getViewParams.set("period", period)
 
-            const response = await this.axiosInstance.get(`/get_views?${getViewParams}`)
+            const result = await this.axiosInstance.get(`http://localhost:3030/get_views?${getViewParams}`)
 
-            return [];
+            return result.data;
         } catch (error) {
             console.log('Error fetching page views:', error);
             return [];
@@ -61,4 +63,4 @@ class Request {
     }
 }
 
-export default Request.getInstance();
+export default RequestHandler.getInstance();

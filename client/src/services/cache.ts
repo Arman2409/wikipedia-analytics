@@ -1,14 +1,15 @@
 import { CACHE_DEFAULT_TTL } from "../configs/configs";
+import { safeParse } from "../utils/helpers";
 
-export interface LocalStorageCache {
-    set(key: string, value: unknown, ttlMinutes: number, identificator?: string): void;
+interface LocalStorageCacheHandler {
+    set(key: string, value: unknown, identificator?: string, ttlMinutes?: number, ): void;
     get<T = unknown>(key: string, identificator?: string): T | null;
     remove(key: string, identificator?: string): void;
     clear(): void;
 }
 
 // TODO This should be in another place 
-export class LocalStorageCache {
+class LocalStorageCacheHandler {
     constructor(private prefix = 'app_') { }
 
     private getStorageKey(
@@ -21,8 +22,8 @@ export class LocalStorageCache {
     set(
         key: string,
         value: unknown,
+        identificator?: string,
         ttlMinutes: number = CACHE_DEFAULT_TTL,
-        identificator?: string
     ) {
         const expires = Date.now() + ttlMinutes * 60 * 1000;
         const wrapped = { value, expires };
@@ -48,7 +49,8 @@ export class LocalStorageCache {
                 this.remove(key);
                 return null;
             }
-            return value;
+            
+            return safeParse(value);
         } catch {
             this.remove(key);
             return null;
@@ -72,3 +74,5 @@ export class LocalStorageCache {
         });
     }
 }
+
+export default LocalStorageCacheHandler;

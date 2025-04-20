@@ -1,19 +1,50 @@
+import LocalStorageCacheHandler from './services/cache';
+import RequestHandler from './services/request';
+import store from "./state/store";
 import "./components/searchbar";
 import "./components/periodButtons";
 import "./components/barChart";
-import myChart from "./components/barChart";
-import { LocalStorageCache } from './utils/cache';
-import RequestHandler from './api/request';
+import { updateChart } from "./components/barChart";
 import { setOnPeriodSelected } from './components/periodButtons';
+import { procesGetPageResult } from './utils/helpers';
+import { INITIAL_SELECTED_PERIOD } from './configs/configs';
+import type { PageViewsResponse } from "./types/global";
 
-const cache = new LocalStorageCache('page_view_');
+const cache = new LocalStorageCacheHandler('page_view_');
 
+const { getSelectedPage } = store;
 
-setOnPeriodSelected(async (selectedPeriod, event) => {
+const statisticsPageName = document.querySelector(".statistics-page-name") as HTMLSpanElement;
+
+// Get Main page data for initial view 
+(async function getInitialData() {
+    const selectedPage = getSelectedPage();
+
+    const result = await RequestHandler.getPageData(selectedPage, INITIAL_SELECTED_PERIOD);
+
+    procesGetPageResult(result, selectedPage, statisticsPageName, updateChart);
+})()
+
+// Handle period change event 
+setOnPeriodSelected(async selectedPeriod => {
     try {
-        if (event) event.preventDefault(); // Prevent form submission or default action
-        const result = await RequestHandler.getPageData("Facebook", selectedPeriod);
-        console.log({ result });
+        const selectedPage = getSelectedPage();
+
+        let result: PageViewsResponse;
+
+        // Check if the requested data is available in cache, otherwise send a request
+        const cachedResult = cache.get<PageViewsResponse>(selectedPage, selectedPeriod);
+
+        if (cachedResult) {
+            result = cachedResult;
+        } else {
+            result = await RequestHandler.getPageData(selectedPage, selectedPeriod);
+
+            cache.set(selectedPage, result, selectedPeriod);
+        }
+
+        procesGetPageResult(result, selectedPage, statisticsPageName, updateChart)
+
     } catch (error) {
         console.error('Error in onPeriodSelected callback:', error);
     }

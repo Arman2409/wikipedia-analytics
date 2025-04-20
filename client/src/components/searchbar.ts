@@ -1,6 +1,8 @@
 import { debounce } from "../utils/helpers";
-import { Request } from '../api/request';
+import RequestHandler from '../services/request';
+import store from "../state/store"
 
+const { getSelectedPage, updateSelectedPage } = {...store }
 
 const pageSearch = document.getElementById('pageSearch') as HTMLInputElement;
 const suggestionsList = document.getElementById('suggestions') as HTMLUListElement;
@@ -13,7 +15,7 @@ const updateSuggestions = debounce(async (query: string) => {
         return;
     }
 
-    const suggestions = await Request.getInstance().getPageSuggestions(query);
+    const suggestions = await RequestHandler.getPageSuggestions(query);
     suggestionsList.innerHTML = '';
     if (suggestions.length === 0) {
         suggestionsList.classList.add('hidden');
@@ -27,6 +29,7 @@ const updateSuggestions = debounce(async (query: string) => {
         li.addEventListener('click', () => {
             selectedPage = suggestion;
             pageSearch.value = suggestion;
+            updateSelectedPage(suggestion)
             suggestionsList.innerHTML = '';
             suggestionsList.classList.add('hidden');
         });
