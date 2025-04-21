@@ -9,6 +9,7 @@ import notFoundMiddleware from "./middlewares/notFoundMiddleware";
 import getViewsController from "./controllers/getViewsController";
 import healthCheckController from "./controllers/healthCheckController";
 
+
 // Set up
 dotenv.config();
 const app = express();

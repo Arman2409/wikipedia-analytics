@@ -3,8 +3,9 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 
-// configs/configs.ts
+// constants/configs.ts
 var WIKIPEDIA_API_URL = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/de.wikipedia.org/all-access/all-agents";
+var DEFAULT_TTL_IN_MINUTES = 120;
 var DEFAULT_PORT = 3030;
 
 // services/logger.ts
@@ -48,13 +49,13 @@ var loggingMiddleware_default = loggingMiddleware;
 
 // middlewares/notFoundMiddleware.ts
 var notFoundMiddleware = (_, res) => {
-  res.status(404 /* NOT_FOUND */).send({
+  res.status(404 /* NOT_FOUND */).json({
     error: "Resource not found" /* RESOURCE_NOT_FOUND */
   });
 };
 var notFoundMiddleware_default = notFoundMiddleware;
 
-// utils/type-guards.ts
+// utils/typeGuards.ts
 var isNonEmptyString = (value) => {
   return typeof value === "string" && value.trim().length > 0;
 };
@@ -91,7 +92,7 @@ var handleGetViewsQueryValidation = (query, res) => {
   }
   const granularity = periodsMap.get(period);
   if (!granularity) {
-    res.status(400 /* BAD_REQUEST */).send(
+    res.status(400 /* BAD_REQUEST */).json(
       { error: `Period not allowed. Allowed periods are: ${Array.from(periodsMap.keys()).join(", ")}` }
     );
     return;
@@ -104,11 +105,18 @@ import axios from "axios";
 
 // utils/helpers.ts
 var getFormattedDate = (dateNumber) => {
-  const date = new Date(dateNumber);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  const date2 = new Date(dateNumber);
+  const year = date2.getFullYear();
+  const month = String(date2.getMonth() + 1).padStart(2, "0");
+  const day = String(date2.getDate()).padStart(2, "0");
   return `${year}${month}${day}`;
+};
+var safeParse = (input) => {
+  try {
+    return JSON.parse(input);
+  } catch (_) {
+    return input;
+  }
 };
 
 // services/request.ts
@@ -133,8 +141,11 @@ var RequestHandler = class _RequestHandler {
       let { name, period, granularity } = { ...argsObj };
       const currentDate = Date.now();
       const startDate = currentDate - period * 24 * 60 * 60 * 1e3;
+      console.log("curr", currentDate);
+      console.log("start", startDate, new Date(startDate));
       if (granularity === "weekly") granularity = "daily";
       const url = `/${name}/${granularity}/${getFormattedDate(startDate)}/${getFormattedDate(currentDate)}`;
+      console.log(url);
       const result = await this.axiosInstance.get(url);
       return result.data;
     } catch (err) {
@@ -144,46 +155,121 @@ var RequestHandler = class _RequestHandler {
 };
 var request_default = RequestHandler.getInstance();
 
-// handlers/utils/helpers.ts
+// services/cache.ts
+import { createClient } from "redis";
+var RedisClient = class _RedisClient {
+  static instance;
+  redisClient;
+  constructor() {
+    if (!this.redisClient) {
+      try {
+        const redisClient = createClient({
+          url: process.env.REDIS_URL
+        });
+        redisClient.connect().then(() => {
+          logger_default.info("Connected to Redis");
+        });
+        this.redisClient = redisClient;
+      } catch (err) {
+        logger_default.error("Failed to connect to Redis", err);
+      }
+    }
+  }
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new _RedisClient();
+    }
+    return this.instance;
+  }
+  getStorageKey(key, identificator) {
+    return key + (identificator ? `_${identificator}` : "");
+  }
+  async set(key, value, identificator, ttlInMinutes = DEFAULT_TTL_IN_MINUTES) {
+    if (!this.redisClient) {
+      logger_default.warn("Redis not connected!");
+      return;
+    }
+    const storageKey = this.getStorageKey(key, identificator);
+    try {
+      await this.redisClient.set(
+        storageKey,
+        JSON.stringify(value),
+        {
+          EX: ttlInMinutes * 60 * 1e3
+        }
+      );
+    } catch (err) {
+      logger_default.error("Failed to set value in Redis", err);
+    }
+  }
+  async get(key, identificator) {
+    if (!this.redisClient) {
+      logger_default.warn("Redis not connected!");
+      return;
+    }
+    try {
+      const storageKey = this.getStorageKey(key, identificator);
+      const result = await this.redisClient.get(storageKey);
+      if (!result) return;
+      return safeParse(result);
+    } catch (err) {
+      logger_default.error("Failed to set value in Redis", err);
+    }
+  }
+  async remove(key, identificator) {
+    if (!this.redisClient) {
+      console.warn("Redis not connected!");
+      return;
+    }
+    const storageKey = this.getStorageKey(key, identificator);
+    try {
+      await this.redisClient.del(storageKey);
+    } catch (err) {
+      logger_default.error("Failed to set value in Redis", err);
+    }
+  }
+  async disconnect() {
+    if (this.redisClient) {
+      try {
+        await this.redisClient.disconnect();
+      } catch (err) {
+        logger_default.warn("Failed to disconnect");
+      }
+    } else {
+      logger_default.warn("Redis not connected!");
+    }
+  }
+};
+var cache_default = RedisClient.getInstance();
+
+// models/utils/helpers.ts
 var formatTimestamp = (timestamp, granularity) => {
-  const date = new Date(Number(`${timestamp.slice(0, 8)}0000`));
+  console.log(timestamp);
   if (granularity === "daily") {
-    return String(date.getDate());
+    const day = parseInt(timestamp.slice(6, 8), 10);
+    return String(day);
   } else if (granularity === "weekly") {
     const startOfWeek = new Date(date);
     startOfWeek.setDate(date.getDate() - date.getDay());
     return startOfWeek.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
   } else if (granularity === "monthly") {
-    return date.getMonth().toLocaleString();
+    const month = parseInt(timestamp.slice(4, 6), 10) - 1;
+    console.log("monthly", month);
+    return String(month);
   }
   throw new Error(`Unsupported granularity: ${granularity}`);
 };
 var transformPageViews = (data, period) => {
+  console.log("here");
   const granularity = periodsMap.get(period);
   if (!granularity) {
     throw new Error(`Invalid period: ${period}`);
   }
-  if (granularity === "weekly") {
-    const weeklyMap = /* @__PURE__ */ new Map();
-    data.forEach((item) => {
-      const date = new Date(Number(`${item.timestamp.slice(0, 8)}0000`));
-      const startOfWeek = new Date(date);
-      startOfWeek.setDate(date.getDate() - date.getDay());
-      const label = startOfWeek.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      });
-      const currentViews = weeklyMap.get(label) || 0;
-      weeklyMap.set(label, currentViews + item.views);
-    });
-    return {
-      labels: [...weeklyMap.keys()],
-      views: [...weeklyMap.values()]
-    };
-  }
   const labels = [];
   const views = [];
+  if (granularity === "weekly") {
+  }
+  console.log({ granularity });
   data.forEach((item) => {
     labels.push(formatTimestamp(item.timestamp, granularity));
     views.push(item.views);
@@ -194,9 +280,15 @@ var transformPageViews = (data, period) => {
   };
 };
 
-// handlers/getViewsHandler.ts
-var getViewsHandler = async (validationResult, res) => {
+// models/getViewsModel.ts
+var getViewsModel = async (validationResult, res) => {
   try {
+    const { name, period } = { ...validationResult };
+    const cachedResult = await cache_default.get(name, period);
+    if (cachedResult) {
+      res.status(200 /* OK */).json(cachedResult);
+      return;
+    }
     const result = await request_default.getPageData(validationResult);
     if (!result?.items) {
       res.status(404 /* NOT_FOUND */).json({
@@ -213,7 +305,7 @@ var getViewsHandler = async (validationResult, res) => {
     });
   }
 };
-var getViewsHandler_default = getViewsHandler;
+var getViewsModel_default = getViewsModel;
 
 // controllers/getViewsController.ts
 var getViewsController = async (req, res) => {
@@ -222,24 +314,30 @@ var getViewsController = async (req, res) => {
     if (!validationResult) {
       return;
     }
-    getViewsHandler_default(validationResult, res);
+    getViewsModel_default(validationResult, res);
   } catch (err) {
     console.warn(`${"Failed to retrieve page views" /* FAILED_TO_GET_VIEWS */}: ${err}`);
-    res.status(500 /* INTERNAL_SERVER_ERROR */).send("Failed to retrieve page views" /* FAILED_TO_GET_VIEWS */);
+    res.status(500 /* INTERNAL_SERVER_ERROR */).json({
+      error: "Failed to retrieve page views" /* FAILED_TO_GET_VIEWS */
+    });
   }
 };
 var getViewsController_default = getViewsController;
 
+// controllers/healthCheckController.ts
+var healthCheckController = (_, res) => {
+  res.status(200 /* OK */).json({
+    info: "Server running!"
+  });
+};
+var healthCheckController_default = healthCheckController;
+
 // server.ts
 dotenv.config();
 var app = express();
-app.use(cors({
-  origin: "*"
-}));
+app.use(cors({ origin: "*" }));
 app.use(loggingMiddleware_default);
-app.get("/", (_, res) => {
-  res.send("Server running!");
-});
+app.get("/", healthCheckController_default);
 app.get("/get_views", getViewsController_default);
 app.use(notFoundMiddleware_default);
 var port = process.env.PORT || DEFAULT_PORT;

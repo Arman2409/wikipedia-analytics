@@ -1,7 +1,7 @@
 import Chart from 'chart.js/auto';
 
 import { getCssVariable } from '../utils/helpers';
-import { AVAILABLE_COLORS_FOR_CHART } from '../configs/constants';
+import { AVAILABLE_COLORS_FOR_CHART } from '../constants/constants';
 
 const colors: string[] = [];
 

@@ -1,24 +1,23 @@
 {
-  "name": "client",
-  "module": "index.ts",
+  "name": "wikipedia-analytics-client",
   "type": "module",
   "private": true,
   "scripts": {
     "build:tailwind": "bunx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./dist/styles/tailwind-output.css --watch",
     "build:js": "bun build ./src/index.ts --outdir ./dist/js --minify --watch"
   },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
-    "@tailwindcss/cli": "^4.1.4",
-    "autoprefixer": "^10.4.21",
     "axios": "^1.8.4",
-    "chart.js": "^4.4.9",
+    "chart.js": "^4.4.9"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "tailwindcss": "^4.1.4",
     "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.4"
+    "autoprefixer": "^10.4.21",
+    "@tailwindcss/cli": "^4.1.4"
   }
 }

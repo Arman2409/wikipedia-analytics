@@ -18,8 +18,6 @@ class RequestHandler {
         this.axiosInstance = axios.create({
             baseURL: requestBaseUrl,
         });
-
-        console.log("Request class initialized with:", requestBaseUrl);
     }
 
     static getInstance(): RequestHandler {
@@ -36,9 +34,9 @@ class RequestHandler {
             let { name, period, granularity } = { ...argsObj };
 
             const currentDate = Date.now();
-            const startDate = currentDate - period * 24 * 60 * 60 * 1000;
+            const startDate = currentDate - (period * 24 * 60 * 60 * 1000);
 
-            if(granularity === "weekly") granularity = "daily";
+            if (granularity === "weekly") granularity = "daily";
 
             const url = `/${name}/${granularity}/${getFormattedDate(startDate)}/${getFormattedDate(currentDate)}`;
 

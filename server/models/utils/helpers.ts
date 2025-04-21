@@ -6,21 +6,24 @@ const formatTimestamp = (
   timestamp: string,
   granularity: string
 ): string => {
-  const date = new Date(Number(`${timestamp.slice(0, 8)}0000`));
-
+  
   if (granularity === 'daily') {
 
-    return String(date.getDate());
+    const day = parseInt(timestamp.slice(6, 8), 10);
+    
+    return String(day);
+    
 
   } else if (granularity === 'weekly') {
 
-    const startOfWeek = new Date(date);
-    startOfWeek.setDate(date.getDate() - date.getDay());
-    return startOfWeek.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const day = parseInt(timestamp.slice(6, 8), 10);
 
+    return String(day);
   } else if (granularity === 'monthly') {
 
-    return date.getMonth().toLocaleString();
+    const month = parseInt(timestamp.slice(4, 6), 10) - 1;
+
+    return String(month);
   }
 
   throw new Error(`Unsupported granularity: ${granularity}`);
@@ -31,6 +34,7 @@ export const transformPageViews = (
   data: PageViewsItem[],
   period: number
 ): PageViewsResponse => {
+  
   const granularity = periodsMap.get(period as Period);
 
   if (!granularity) {

@@ -1,7 +1,8 @@
-import redis, { type RedisClientType } from "redis";
+import { createClient, type RedisClientType } from "redis";
 
 import { DEFAULT_TTL_IN_MINUTES } from "../constants/configs";
 import { safeParse } from "../utils/helpers";
+import logger from "./logger";
 
 interface RedisClient {
     set(key: string, value: unknown, identificator?: string, ttlInMinutes?: number): Promise<void>;
@@ -15,9 +16,19 @@ class RedisClient {
 
     private constructor() {
         if (!this.redisClient) {
-            this.redisClient = redis.createClient({
-                url: process.env.REDIS_URL,
-            });;
+            try {
+                const redisClient = createClient({
+                    url: process.env.REDIS_URL,
+                })
+
+                redisClient.connect().then(() => {
+                    logger.info("Connected to Redis");
+                })
+
+                this.redisClient = redisClient as RedisClientType;
+            } catch (err) {
+                logger.error("Failed to connect to Redis", err);
+            }
         }
     }
 
@@ -31,7 +42,7 @@ class RedisClient {
 
     private getStorageKey(
         key: string,
-        identificator?: string
+        identificator?: string | number
     ): string {
         return key + (identificator ? `_${identificator}` : '');
     }
@@ -39,11 +50,11 @@ class RedisClient {
     async set(
         key: string,
         value: unknown,
-        identificator?: string|number,
+        identificator?: string | number,
         ttlInMinutes: number = DEFAULT_TTL_IN_MINUTES
     ): Promise<void> {
         if (!this.redisClient) {
-            console.warn("Redis not connected!");
+            logger.warn("Redis not connected!");
             return;
         }
 
@@ -58,16 +69,16 @@ class RedisClient {
                 }
             );
         } catch (err) {
-            console.error("Failed to set value in Redis", err);
+            logger.error("Failed to set value in Redis", err);
         }
     }
 
     async get<T = unknown>(
         key: string,
-        identificator?: string|number,
+        identificator?: string | number,
     ): Promise<T | void> {
         if (!this.redisClient) {
-            console.warn("Redis not connected!");
+            logger.warn("Redis not connected!");
             return;
         }
 
@@ -79,7 +90,7 @@ class RedisClient {
 
             return safeParse(result);
         } catch (err) {
-            console.error("Failed to set value in Redis", err);
+            logger.error("Failed to set value in Redis", err);
         }
     }
 
@@ -89,7 +100,7 @@ class RedisClient {
         identificator?: string,
     ): Promise<void> {
         if (!this.redisClient) {
-            console.warn("Redis not connected!");
+            logger.warn("Redis not connected!");
             return;
         }
 
@@ -98,7 +109,7 @@ class RedisClient {
         try {
             await this.redisClient.del(storageKey);
         } catch (err) {
-            console.error("Failed to set value in Redis", err);
+            logger.error("Failed to set value in Redis", err);
         }
     }
 
@@ -107,10 +118,10 @@ class RedisClient {
             try {
                 await this.redisClient.disconnect();
             } catch (err) {
-                console.warn("Failed to disconnect");
+                logger.warn("Failed to disconnect");
             }
         } else {
-            console.warn("Redis not connected!");
+            logger.warn("Redis not connected!");
         }
     }
 }

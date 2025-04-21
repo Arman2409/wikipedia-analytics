@@ -10,17 +10,21 @@ class Logger {
     console.log(log);
   }
 
-  public error(message: string, err?: Error) {
-    const errorDetails = err ? `${message}, Error: ${err.message}` : message;
+  public error(
+    message: string,
+    err?: Error | unknown
+  ) {
+    const errorDetails = err ? `${message}, Error: ${(err as Error).message}` : message;
+
     const log = `[${chalk.gray(this.getTimestamp())}] ${chalk.redBright('ERROR')}: ${errorDetails}`;
     console.log(log);
   }
-  
+
   public warn(message: string) {
     const log = `[${chalk.gray(this.getTimestamp())}] ${chalk.yellowBright('WARN')}: ${message}`;
     console.log(log);
   }
-  
+
   public debug(message: string) {
     const log = `[${chalk.gray(this.getTimestamp())}] ${chalk.cyanBright('DEBUG')}: ${message}`;
     console.log(log);
