@@ -1,5 +1,4 @@
 import { MAIN_PAGE_KEY } from "../constants/constants";
-import type { PageViewsResponse } from "../types/global";
 
 // TODO make any to unknown 
 export const debounce = <T extends (...args: any[]) => void>(func: T, wait: number): (
@@ -41,17 +40,4 @@ export const getPageName = (name: string) => {
 }
 
 
-export const procesGetPageResult = (
-  result: PageViewsResponse,
-  selectedPage: string,
-  statisticsPageName: HTMLSpanElement,
-  updateChart: (labels: string[], views: number[]) => void
-) => {
-  if (result) {
-    const { labels, views } = { ...result };
 
-    if (statisticsPageName) statisticsPageName.innerHTML = getPageName(selectedPage);
-
-    updateChart(labels, views);
-  }
-}

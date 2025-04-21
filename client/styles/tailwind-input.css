@@ -14,7 +14,3 @@
     --color-accent: #ffda25;
 }
 
-body {
-    background-color: var(--color-background);
-    color: var(--color-text);
-}

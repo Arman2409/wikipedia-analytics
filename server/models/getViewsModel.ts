@@ -36,7 +36,7 @@ const getViewsModel = async (
         // Update cache if needed
         const data = transformPageViews(result.items, validationResult.period);
 
-        cache.set(name, data, period);
+        // cache.set(name, data, period);
 
 
         res.status(StatusCode.OK).json(data);

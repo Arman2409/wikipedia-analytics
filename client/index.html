@@ -6,6 +6,7 @@
   <link rel="icon" href="./assets/favicon.png" type="image/png">
   <title>Wikipedia Analytics</title>
   <link href="./dist/styles/tailwind-output.css" rel="stylesheet">
+  <link href="./styles/global.css" rel="stylesheet">
 </head>
 
 <body>
@@ -15,47 +16,55 @@
     <img src="./assets/logo.png" alt="Wikipedia Analytics" class="inline-block mr-2">
   </header>
 
-  <!-- Search Bar -->
-  <div class="p-2">
-    <label for="pageSearch" class="block text-sm font-medium text-accent">
-      Search Page:
-    </label>
-    <div class="relative">
-      <input id="pageSearch" type="text" placeholder="Type to search Wikipedia pages..."
-        class="w-[450px] mt-1 block py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-      <ul id="suggestions"
-        class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto hidden">
-      </ul>
+  <main class="relative">
+    <div class="loading w-full h-full absolute bg-black opacity-50">
+       <img src="./assets/loading.gif" alt="Loading..." class="w-[50px] h-[50px]">
     </div>
-  </div>
-
-  <!-- Statistics container -->
-  <div class="p-2 rounded-lg shadow-lg w-full max-w-4xl">
-    <h1 class="text-2xl font-bold mb-4 text-center">
-      Statistics for
-      <span class="statistics-page-name text-accent"></span>
-    </h1>
-
-    <!-- Period options buttons  -->
-    <div class="mb-4">
-      <div class="flex gap-2 justify-center sm:justify-start">
-        <button data-period="30" type="button"
-          class="period-btn px-4 py-2 rounded-md border border-gray-300 bg-white hover:bg-indigo-100 focus:ring-2 focus:ring-indigo-500 text-sm">
-          30 Days (Daily)
-        </button>
-        <button data-period="90" type="button"
-          class="period-btn px-4 py-2 rounded-md border border-gray-300 bg-white hover:bg-indigo-100 focus:ring-2 focus:ring-indigo-500 text-sm">
-          90 Days (Weekly)
-        </button>
-        <button data-period="365" type="button"
-          class="period-btn px-4 py-2 rounded-md border border-gray-300 bg-white hover:bg-indigo-100 focus:ring-2 focus:ring-indigo-500 text-sm">
-          365 Days (Monthly)
-        </button>
+    <!-- Search Bar -->
+    <div class="p-2">
+      <label for="pageSearch" class="block text-sm font-medium text-accent">
+        Search Page:
+      </label>
+      <div class="relative">
+        <input id="pageSearch" type="text" placeholder="Type to search Wikipedia pages..."
+          class="w-[450px] mt-1 block py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+        <ul id="suggestions"
+          class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto hidden">
+        </ul>
       </div>
     </div>
 
-    <!-- Chart bar -->
-    <canvas id="myChart"></canvas>
-  </div>
-  <script src="./dist/js/index.js" type="module"></script>
+    <!-- Statistics container -->
+    <div class="p-2 rounded-lg shadow-lg w-full max-w-4xl">
+      <h1 class="text-2xl font-bold mb-4 text-center">
+        Statistics for
+        <span class="statistics-page-name text-accent"></span>
+      </h1>
+
+      <!-- Period options buttons  -->
+      <div class="mb-4">
+        <div class="flex gap-2 justify-center sm:justify-start">
+          <button data-period="30" type="button"
+            class="period-btn cursor-pointer border-primary px-4 py-2 rounded-md border bg-white hover:bg-indigo-100 text-sm">
+            30 Days (Daily)
+          </button>
+          <button data-period="90" type="button"
+            class="period-btn cursor-pointer px-4 py-2 rounded-md border bg-red-500 text-sm">
+            90 Days (Weekly)
+          </button>
+          <button data-period="365" type="button"
+            class="period-btn cursor-pointer px-4 py-2 rounded-md border bg-white hover:bg-indigo-100  text-sm">
+            365 Days (Monthly)
+          </button>
+        </div>
+      </div>
+
+      <!-- Chart bar -->
+      <canvas id="myChart"></canvas>
+    </div>
+  </main>
+
+
+
+  <script src="./dist/js/index.global.js" type="module"></script>
 </body>

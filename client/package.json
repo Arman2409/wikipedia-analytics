@@ -3,8 +3,13 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build:tailwind": "bunx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./dist/styles/tailwind-output.css --watch",
-    "build:js": "bun build ./src/index.ts --outdir ./dist/js --minify --watch"
+    "prebuild:tailwind": "mkdir -p ./dist/styles",
+    "prebuild:js": "mkdir -p ./dist/js",
+    "build:tailwind": "npx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./dist/styles/tailwind-output.css ",
+    "build:tailwind:dev": "npx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./dist/styles/tailwind-output.css --watch",
+    "build:css": "build:tailwind && cp ./styles/global.css ./dist/styles/global.css",
+    "build:js": "tsup",
+    "build:js:dev": "tsup --watch"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -14,10 +19,11 @@
     "chart.js": "^4.4.9"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.1.4",
     "@types/bun": "latest",
-    "tailwindcss": "^4.1.4",
-    "postcss": "^8.5.3",
     "autoprefixer": "^10.4.21",
-    "@tailwindcss/cli": "^4.1.4"
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.4",
+    "tsup": "^8.4.0"
   }
 }
