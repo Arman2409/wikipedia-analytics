@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance } from 'axios';
 
-import { BASE_API_URL, WIKIPEDIA_API_URL } from '../configs/configs';
+import { BASE_API_URL, WIKIPEDIA_API_URL } from '../constants/configs';
 
 interface RequestHandler {
     getPageData(name: string, period: string): Promise<unknown[]>;
@@ -15,18 +15,13 @@ class RequestHandler {
         this.axiosInstance = axios.create({
             baseURL: BASE_API_URL,
         });
-
-        this.axiosInstance.defaults.maxRedirects = 0;
-
-        console.log(this.axiosInstance.interceptors.response);
-        
-        console.log("Request class initialized with:", BASE_API_URL);
     }
 
     static getInstance(): RequestHandler {
         if (!RequestHandler.instance) {
             RequestHandler.instance = new RequestHandler();
         }
+        
         return RequestHandler.instance;
     }
 
@@ -39,11 +34,12 @@ class RequestHandler {
             getViewParams.set("name", name);
             getViewParams.set("period", period)
 
-            const result = await this.axiosInstance.get(`http://localhost:3030/get_views?${getViewParams}`)
+            const result = await this.axiosInstance.get(`/get_views?${getViewParams}`)
 
             return result.data;
         } catch (error) {
-            console.log('Error fetching page views:', error);
+            console.error('Error fetching page views:', error);
+
             return [];
         }
     }
@@ -57,7 +53,8 @@ class RequestHandler {
 
             return response.data[1]; // Array of page titles
         } catch (error) {
-            console.log('Error fetching suggestions:', error);
+            console.error('Error fetching suggestions:', error);
+
             return [];
         }
     }

@@ -1,11 +1,11 @@
 import axios, { type AxiosInstance } from 'axios';
 
-import { WIKIPEDIA_API_URL } from '../configs/configs';
+import { WIKIPEDIA_API_URL } from '../constants/configs';
 import { getFormattedDate } from '../utils/helpers';
-import type { GetPageViewsPayload, PageViewsRetrievedData } from '../types/getViews';
+import type { GetPageViewsDto, PageViewsRetrievedData } from '../types/getViews';
 
 interface RequestHandler {
-    getPageData(argsObj: GetPageViewsPayload): Promise<PageViewsRetrievedData | null>
+    getPageData(argsObj: GetPageViewsDto): Promise<PageViewsRetrievedData | null>
 }
 
 class RequestHandler {
@@ -30,7 +30,7 @@ class RequestHandler {
     }
 
     async getPageData(
-        argsObj: GetPageViewsPayload
+        argsObj: GetPageViewsDto
     ): Promise<PageViewsRetrievedData | null> {
         try {
             let { name, period, granularity } = { ...argsObj };

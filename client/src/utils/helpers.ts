@@ -1,4 +1,4 @@
-import { MAIN_PAGE_KEY } from "../configs/constants";
+import { MAIN_PAGE_KEY } from "../constants/constants";
 import type { PageViewsResponse } from "../types/global";
 
 // TODO make any to unknown 
@@ -22,6 +22,7 @@ export const getCssVariable = (variableName: string): string => {
   return value ? value.trim() : "";
 }
 
+
 export const safeParse = (input: string) => {
   try {
     return JSON.parse(input);
@@ -30,12 +31,15 @@ export const safeParse = (input: string) => {
   }
 }
 
+
 export const getPageName = (name: string) => {
   if (name === MAIN_PAGE_KEY) {
     return "Main Page";
   }
+
   return name;
 }
+
 
 export const procesGetPageResult = (
   result: PageViewsResponse,
@@ -48,6 +52,6 @@ export const procesGetPageResult = (
 
     if (statisticsPageName) statisticsPageName.innerHTML = getPageName(selectedPage);
 
-    updateChart(labels, views)
+    updateChart(labels, views);
   }
 }

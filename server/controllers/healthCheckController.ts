@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 
 import { StatusCode } from "../constants/response";
 
+
 const healthCheckController = (
     _: Request,
     res: Response) => {

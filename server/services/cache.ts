@@ -1,6 +1,6 @@
 import redis, { type RedisClientType } from "redis";
 
-import { DEFAULT_TTL_IN_MINUTES } from "../configs/configs";
+import { DEFAULT_TTL_IN_MINUTES } from "../constants/configs";
 import { safeParse } from "../utils/helpers";
 
 interface RedisClient {

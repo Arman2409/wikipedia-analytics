@@ -1,7 +1,9 @@
 {
   "name": "bun-express",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/cors": "^2.8.17",
+    "nodemon": "^3.1.9"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -10,10 +12,13 @@
     "@prisma/client": "^6.5.0",
     "@types/express": "^5.0.0",
     "axios": "^1.8.4",
+    "chalk": "^5.4.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "prisma": "^6.5.0",
     "redis": "^4.7.0",
+    "tsup": "^8.4.0",
     "winston": "^3.17.0"
   }
 }

@@ -2,20 +2,21 @@ import type { Response } from "express";
 
 import { ErrorMessage, StatusCode } from "../constants/response";
 import RequestHandler from "../services/request";
-import redis from "../services/redis";
+import cache from "../services/cache";
 import logger from "../services/logger";
 import { transformPageViews } from "./utils/helpers";
-import type { GetPageViewsPayload } from "../types/getViews";
+import type { GetPageViewsDto } from "../types/getViews";
+
 
 const getViewsModel = async (
-    validationResult: GetPageViewsPayload,
+    validationResult: GetPageViewsDto,
     res: Response,
 ) => {
     try {
         const { name, period } = { ...validationResult };
 
         // Check the cache for requested data
-        const cachedResult = await redis.get(name, period);
+        const cachedResult = await cache.get(name, period);
 
         if(cachedResult) {
             res.status(StatusCode.OK).json(cachedResult);
@@ -32,10 +33,10 @@ const getViewsModel = async (
             return;
         }
 
-        // Update cache of needed
+        // Update cache if needed
         const data = transformPageViews(result.items, validationResult.period);
 
-        redis.set(name, data, period);
+        cache.set(name, data, period);
 
 
         res.status(StatusCode.OK).json(data);

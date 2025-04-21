@@ -4,6 +4,7 @@ import { ErrorMessage, StatusCode } from "../constants/response";
 import { handleGetViewsQueryValidation } from "./utils/validation";
 import getViewsModel from "../models/getViewsModel";
 
+
 const getViewsController = async (
     req: Request,
     res: Response) => {

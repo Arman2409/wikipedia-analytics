@@ -1,4 +1,4 @@
-import { MAIN_PAGE_KEY } from "../configs/configs";
+import { MAIN_PAGE_KEY } from "../constants/constants";
 
 const stateManager = (() => {
     let selectedPage = MAIN_PAGE_KEY;

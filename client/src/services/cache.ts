@@ -1,14 +1,13 @@
-import { CACHE_DEFAULT_TTL } from "../configs/configs";
+import { CACHE_DEFAULT_TTL } from "../constants/configs";
 import { safeParse } from "../utils/helpers";
 
 interface LocalStorageCacheHandler {
-    set(key: string, value: unknown, identificator?: string, ttlMinutes?: number, ): void;
+    set(key: string, value: unknown, identificator?: string, ttlMinutes?: number): void;
     get<T = unknown>(key: string, identificator?: string): T | null;
     remove(key: string, identificator?: string): void;
     clear(): void;
 }
 
-// TODO This should be in another place 
 class LocalStorageCacheHandler {
     constructor(private prefix = 'app_') { }
 

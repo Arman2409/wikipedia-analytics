@@ -3,12 +3,12 @@ import type { Response } from "express";
 import { ErrorMessage, StatusCode } from "../../constants/response";
 import { isNonEmptyString, isPositiveInteger } from "../../utils/typeGuards";
 import { periodsMap } from "./periods";
-import type { GetPageViewsPayload } from "../../types/getViews";
+import type { GetPageViewsDto } from "../../types/getViews";
 
 
 export const handleGetViewsQueryValidation = (
     query: Record<string, unknown>,
-    res: Response): GetPageViewsPayload | undefined => {
+    res: Response): GetPageViewsDto | undefined => {
 
     let { period, name } = { ...query };
     period = Number(period);

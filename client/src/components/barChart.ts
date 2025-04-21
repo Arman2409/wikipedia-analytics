@@ -12,7 +12,6 @@ AVAILABLE_COLORS_FOR_CHART.forEach(color => {
 const borderColors = [...colors];
 borderColors.push(...borderColors.splice(0, 1));
 
-
 const canvasElement = document.getElementById('myChart') as HTMLCanvasElement;
 
 const myChart = new Chart(canvasElement, {

@@ -1,21 +1,19 @@
 const periodsButtons = document.querySelectorAll('.period-btn');
 
-let onPeriodSelected: ((period: string, event: Event) => void) | null = null;
+let onPeriodSelected: ((period: string) => void) | null = null;
 
-export function setOnPeriodSelected(callback: (period: string, event: Event) => void) {
+// Function to detect period selection externally 
+export function setOnPeriodSelected(callback: (period: string) => void) {
     onPeriodSelected = callback;
 }
 
+// Set up click event for each button 
 periodsButtons.forEach((button) => {
-    button.addEventListener('click', (event: Event) => {
-        event.preventDefault();
-        event.stopPropagation();
-
+    button.addEventListener('click', () => {
         const selectedPeriod = button.getAttribute('data-period');
-        // const customEvent = new CustomEvent('periodSelected', { detail: selectedPeriod });
 
         if (onPeriodSelected) {
-            onPeriodSelected(selectedPeriod as string, event); // Call the callback
+            onPeriodSelected(selectedPeriod as string); // Call the callback
         }
     });
 })

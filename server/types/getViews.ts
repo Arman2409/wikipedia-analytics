@@ -1,8 +1,9 @@
+export type Period = 30 | 90 | 365;
 export type Granularity = "daily" | "monthly" | "weekly"
 
-export interface GetPageViewsPayload {
-    period: number;
+export interface GetPageViewsDto {
     name: string;
+    period: Period;
     granularity: Granularity;
 }
 
