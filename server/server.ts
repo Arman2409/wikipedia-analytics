@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 
+import "./crons/archiveCron";
 import { DEFAULT_PORT } from "./constants/configs";
 import logger from "./services/logger";
 import loggingMiddleware from "./middlewares/loggingMiddleware";

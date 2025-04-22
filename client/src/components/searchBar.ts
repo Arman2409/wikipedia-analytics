@@ -8,6 +8,12 @@ const { updateSelectedPage } = {...store }
 const pageSearch = document.getElementById('pageSearch') as HTMLInputElement;
 const suggestionsList = document.getElementById('suggestions') as HTMLUListElement;
 
+let onSuggestionSelected: ((pageName: string) => void) | null = null;
+
+// Function to detect period selection externally 
+export function setOnSuggestionSelected(callback: (pageName: string) => void) {
+    onSuggestionSelected = callback;
+}
 
 const updateSuggestions = debounce(async (query: string) => {
     if (query.length < 2) {
@@ -31,6 +37,10 @@ const updateSuggestions = debounce(async (query: string) => {
         li.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer';
         li.textContent = suggestion;
         li.addEventListener('click', () => {
+            if(onSuggestionSelected) {
+                onSuggestionSelected(suggestion);
+            }
+
             pageSearch.value = suggestion;
             updateSelectedPage(suggestion)
             suggestionsList.innerHTML = '';

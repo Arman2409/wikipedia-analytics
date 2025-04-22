@@ -3,6 +3,7 @@ import { createClient, type RedisClientType } from "redis";
 import { DEFAULT_TTL_IN_MINUTES } from "../constants/configs";
 import { safeParse } from "../utils/helpers";
 import logger from "./logger";
+import { EnvironmentErrors } from "../constants/environment";
 
 interface RedisClient {
     set(key: string, value: unknown, identificator?: string, ttlInMinutes?: number): Promise<void>;
@@ -21,9 +22,15 @@ class RedisClient {
                     url: process.env.REDIS_URL,
                 })
 
-                redisClient.connect().then(() => {
-                    logger.info("Connected to Redis");
-                })
+                // Connect to Redis 
+                redisClient.connect()
+                    .then(() => {
+                        logger.info("Connected to Redis");
+                    })
+                    .catch(err => {
+                        logger.error("Failed to connect to Redis", err);
+                        process.exit(1);
+                    })
 
                 this.redisClient = redisClient as RedisClientType;
             } catch (err) {
@@ -94,6 +101,55 @@ class RedisClient {
         }
     }
 
+    async getAll(
+        getJson: boolean = true
+    ): Promise<Record<string, unknown> | string> {
+        if (!this.redisClient) {
+            logger.warn("Redis not connected!");
+            return getJson ? {} : "";
+        }
+
+        try {
+            const keys = await this.redisClient.keys('*');
+
+            if (!keys.length) {
+                return getJson ? {} : "";
+            }
+
+            const values = await this.redisClient.mGet(keys);
+
+
+            if (getJson) {
+                const result: Record<string, unknown> = {};
+
+                keys.forEach((key, index) => {
+                    const raw = values[index];
+                    if (raw !== null) {
+                        result[key] = safeParse(String(raw));
+                    }
+                });
+
+                return result;
+            } else {
+                let stringJson: string = "{";
+
+                keys.forEach((key, i) => {
+                    logger.info(`Key: ${key}`);
+                    const value = values[i];
+                    if (value !== null) {
+                        stringJson += `\"${key}\":${value},`;
+                    }
+                });
+
+                stringJson = stringJson.slice(0, -1) + "}";
+
+                return stringJson;
+            }
+        } catch (err) {
+            logger.error("Failed to get all values from Redis", err);
+            return {};
+        }
+    }
 
     async remove(
         key: string,

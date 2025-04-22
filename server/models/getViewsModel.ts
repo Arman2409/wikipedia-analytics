@@ -23,7 +23,7 @@ const getViewsModel = async (
             return;
         }
 
-        // Retrieve the data 
+        // Retrieve the data from external API
         const result = await RequestHandler.getPageData(validationResult);
 
         if (!result?.items) {
@@ -33,10 +33,11 @@ const getViewsModel = async (
             return;
         }
 
-        // Update cache if needed
+        // Transform the data
         const data = transformPageViews(result.items, validationResult.period);
 
-        // cache.set(name, data, period);
+        // Update cache if needed
+        cache.set(name, data, period);
 
 
         res.status(StatusCode.OK).json(data);

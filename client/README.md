@@ -1,14 +1,46 @@
-# Client README
+# Client
+
 
 ## Overview
 
 The `client` directory contains the frontend code for the Wikipedia Analytics application. It is built using TypeScript and Tailwind CSS. The client handles the user interface, user interactions, and API communication with the server, utilizing libraries like Axios for HTTP requests and Chart.js for data visualization.
 
+
+## Setup
+
+1. **Install Node.js and NPM**: Ensure Node.js and NPM are installed.
+
+2. **Install dependencies**: Run in the `client` directory:
+
+```bash
+npm install
+```
+
+3. **Run the prebuild commands**: Create the folders for static files:
+
+```bash
+npm run prebuild:js;
+npm run prebuild:tailwind
+```
+
+4. **Build the project**: Compile and bundle the TypeScript code and Tailwind CSS:
+
+```bash
+npm run build:js;
+npm run build:tailwind
+# or for development
+npm run build:js:dev;
+npm run build:tailwind:dev
+```
+
+5. Open the ./client/index.html file in your web browser to view the application.
+
+
 ## Directory Structure
 
 ```
 client/
-├── assets/                 # Static assets (e.g., favicon, logo)
+├── assets/                 # Static assets
 ├── src/                    # Source code
 │   ├── components/         # Reusable UI components
 │   ├── constants/          # Configuration and constants
@@ -22,36 +54,15 @@ client/
 ├── tsup.config.ts          # TSUP configuration
 ```
 
-## Setup
-
-1. **Install Node.js and NPM**: Ensure Node.js is installed.
-
-2. **Install Dependencies**: Run in the `client` directory:
-
-   ```bash
-   npm install
-   ```
-
-3. **Build the Project**: Compile and bundle the TypeScript code and Tailwind CSS:
-
-   ```bash
-   bun run build:js
-   bun run build:tailwind
-   // or for development
-   bun run build:js:dev
-   bun run build:tailwind:dev
-   ```
-
-4. Open the ./client/index.html file in your web browser to view the application."
 
 ## Key Scripts
 
-- `bun run build:js`: Builds the TypeScript code using TSUP.
-- `bun run build:js:dev`: Builds the TypeScript code with watch mode for development.
-- `bun run build:tailwind`: Compiles Tailwind CSS to `dist/styles/tailwind-output.css`.
-- `bun run build:tailwind:dev`: Compiles Tailwind CSS with watch mode for development.
-- `bun run prebuild:js`: Creates the `dist/js` directory for JavaScript output.
-- `bun run prebuild:tailwind`: Creates the `dist/styles` directory for CSS output.
+- `npm run build:js`: Builds the TypeScript code using TSUP.
+- `npm run build:js:dev`: Builds the TypeScript code with watch mode for development.
+- `npm run build:tailwind`: Compiles Tailwind CSS to `dist/styles/tailwind-output.css`.
+- `npm run build:tailwind:dev`: Compiles Tailwind CSS with watch mode for development.
+- `npm run prebuild:js`: Creates the `dist/js` directory for JavaScript output.
+- `npm run prebuild:tailwind`: Creates the `dist/styles` directory for CSS output.
 
 
 ## Notes

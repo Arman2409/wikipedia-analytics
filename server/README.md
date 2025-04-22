@@ -1,8 +1,10 @@
 # Server
 
+
 ## Overview
 
 The `server` directory contains the backend code for the application. It is built using TypeScript, Express.js, Redis. The server provides API endpoints for the client, manages data, and handles requests.
+
 
 ## Setup
 
@@ -10,32 +12,32 @@ The `server` directory contains the backend code for the application. It is buil
 
 2. **Install Dependencies**: Run in the `server` directory:
 
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
 3. Set up the environment variables(ypu can see them in the .env.example file as well):
   
-  ```bash
-  PORT=<your-port>
-  REDIS_URL=<your-redis-url>
-  ```
+```
+PORT=<your-port>
+REDIS_URL=<your-redis-url>
+```
 
 4. **Build the Project**: Compile the code:
 
-   ```bash
-   npm run build
-   // or for development
-   npm run build:dev
-   ```
+```bash
+npm run build
+# or for development
+npm run build:dev
+```
 
 5. **Start the Server**: Run the production server:
 
-   ```bash
-   npm run start
-   // or for development
-   npm run start:dev
-   ```
+```bash
+npm run start
+# or for development
+npm run start:dev
+```
 
 ## Directory Structure
 
