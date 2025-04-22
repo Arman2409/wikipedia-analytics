@@ -16,7 +16,7 @@ The `server` directory contains the backend code for the application. It is buil
 npm install
 ```
 
-3. Set up the environment variables(ypu can see them in the .env.example file as well):
+3. Set up the environment variables(you can find them in the .env.example file as well):
   
 ```
 PORT=<your-port>
@@ -57,6 +57,16 @@ server/
 ├── tsconfig.json           # TypeScript configuration
 ├── tsup.config.ts          # TSUP configuration
 ```
+
+
+## Key Scripts
+
+- `npm run build`: Builds the TypeScript code using TSUP.
+- `npm run build:dev`: Builds the TypeScript code with watch mode for development.
+- `npm run start`: Starts the server.
+- `npm run start:dev`: Starts the server with watch mode for development.
+- `npm run typecheck`: Implements TypeScript checking.
+
 
 ## Notes
 

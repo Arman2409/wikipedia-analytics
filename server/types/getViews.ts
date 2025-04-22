@@ -1,4 +1,5 @@
 export type Period = 30 | 90 | 365;
+
 export type Granularity = "daily" | "monthly" | "weekly"
 
 export interface GetPageViewsDto {

@@ -7,6 +7,7 @@ const loggingMiddleware = (
     _: Response,
     next: NextFunction
 ): void => {
+    
     // Gather log details
     const remoteAddr = req.ip || req.socket.remoteAddress || '-';
     const method = req.method;

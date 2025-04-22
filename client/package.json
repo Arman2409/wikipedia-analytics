@@ -9,7 +9,8 @@
     "build:tailwind:dev": "npx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./dist/styles/tailwind-output.css --watch",
     "build:css": "build:tailwind && cp ./styles/global.css ./dist/styles/global.css",
     "build:js": "tsup",
-    "build:js:dev": "tsup --watch"
+    "build:js:dev": "tsup --watch",
+    "typecheck": "tsc"
   },
   "peerDependencies": {
     "typescript": "^5"

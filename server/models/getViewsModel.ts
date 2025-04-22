@@ -1,5 +1,6 @@
 import type { Response } from "express";
 
+import { PAGE_VIEW_CACHE_PREFIX } from "../constants/configs";
 import { ErrorMessage, StatusCode } from "../constants/response";
 import RequestHandler from "../services/request";
 import cache from "../services/cache";
@@ -16,9 +17,9 @@ const getViewsModel = async (
         const { name, period } = { ...validationResult };
 
         // Check the cache for requested data
-        const cachedResult = await cache.get(name, period);
+        const cachedResult = await cache.get(name, PAGE_VIEW_CACHE_PREFIX, period);
 
-        if(cachedResult) {
+        if (cachedResult) {
             res.status(StatusCode.OK).json(cachedResult);
             return;
         }
@@ -37,7 +38,7 @@ const getViewsModel = async (
         const data = transformPageViews(result.items, validationResult.period);
 
         // Update cache if needed
-        cache.set(name, data, period);
+        cache.set(name, data, PAGE_VIEW_CACHE_PREFIX, period);
 
 
         res.status(StatusCode.OK).json(data);

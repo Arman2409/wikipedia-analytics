@@ -12,24 +12,25 @@
 <body>
 
   <!-- Header  -->
-  <header class="bg-primary text-white p-2">
-    <img src="./assets/logo.png" alt="Wikipedia Analytics" class="inline-block mr-2">
+  <header class="bg-primary p-2">
+    <img src="./assets/logo.png" alt="Wikipedia Analytics">
   </header>
 
   <main>
     <div class="loading">
-       <img src="./assets/loading.gif" alt="Loading..." class="w-[50px] h-[50px]">
+       <img src="./assets/loading.gif" alt="Loading...">
     </div>
+
     <!-- Search Bar -->
     <div class="p-2">
-      <label for="pageSearch" class="block text-sm font-medium text-accent">
+      <label for="pageSearch" class="text-sm font-medium text-accent">
         Search Page:
       </label>
       <div class="relative">
         <input id="pageSearch" type="text" placeholder="Type to search Wikipedia pages..."
-          class="w-[450px] mt-1 block py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          class="w-[450px] mt-1 block py-2 px-3 border border-secondary rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
         <ul id="suggestions"
-          class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto hidden">
+          class="absolute z-10 w-full border border-secondary text-accent bg-white rounded-md shadow-lg max-h-60 overflow-y-auto hidden">
         </ul>
       </div>
     </div>
@@ -42,7 +43,7 @@
       </h1>
 
       <!-- Period options buttons  -->
-      <div class="mb-4">
+      <div class="w-full flex justify-center items-center mb-4">
         <div class="flex gap-2 justify-center sm:justify-start">
           <button data-period="30" type="button"
             class="period-btn cursor-pointer border-primary px-4 py-2 rounded-md border bg-white hover:bg-indigo-100 text-sm">
@@ -60,7 +61,7 @@
       </div>
 
       <!-- Chart bar -->
-      <canvas id="myChart"></canvas>
+      <canvas id="bar-chart"></canvas>
     </div>
   </main>
 

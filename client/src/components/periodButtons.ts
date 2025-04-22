@@ -1,5 +1,6 @@
 import { CLICKED_BUTTON_CLASSLIST } from "../constants/constants";
 
+
 const periodsButtons = document.querySelectorAll('.period-btn');
 
 let onPeriodSelected: ((period: string) => void) | null = null;
@@ -21,12 +22,6 @@ periodsButtons.forEach((button) => {
         }
     });
 })
-
-/**
- * Update the styling  of the clicked period button by adding a border to visually indicate the selection.
- * 
- * @param period - The number or string representing the period associated with the button to be highlighted.
- */
 
 export function updateClickedButton(period: number | string) {
     const allPeriodButtons = document.querySelectorAll(".period-btn");

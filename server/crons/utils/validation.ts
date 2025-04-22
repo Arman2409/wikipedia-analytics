@@ -1,8 +1,9 @@
-import { EnvironmentErrors } from "../../constants/environment";
+import { awsEnvMessages } from "../../constants/environment";
 import logger from "../../services/logger";
-import type { ValidateArchiveCronEnvResult } from "../../types/crons";
+import type { ArchiveCronValidationResult } from "../../types/crons";
 
-export const validateEnvironmentVariables = (): ValidateArchiveCronEnvResult|void => {
+
+export const validateEnvironmentVariables = (): ArchiveCronValidationResult|void => {
 
     // Get environment variables
     const region = process.env.AWS_REGION || 'us-east-1';
@@ -12,16 +13,16 @@ export const validateEnvironmentVariables = (): ValidateArchiveCronEnvResult|voi
 
     if (!accessKeyId || !secretAccessKey || !bucketName) {
         if (!accessKeyId) {
-            logger.error('AWS_ACCESS_KEY_ID environment variable is not defined');
+            logger.warn(awsEnvMessages.MISSING_ACCESS_KEY_ID);
         }
         if (!secretAccessKey) {
-            logger.error('AWS_SECRET_ACCESS_KEY environment variable is not defined');
+            logger.warn(awsEnvMessages.MISSING_SECRET_ACCESS_KEY);
         }
         if (!bucketName) {
-            logger.error('AWS_S3_BUCKET_NAME environment variable is not defined');
+            logger.warn(awsEnvMessages.MISSING_BUCKET_NAME);
         }
-
-        logger.warn(EnvironmentErrors.MISSING_AWS_ENV_VARIABLE);
+        
+        logger.warn(awsEnvMessages.MISSING_AWS_ENV_FOR_ARCHIVE_CRON);
 
         return;
     }

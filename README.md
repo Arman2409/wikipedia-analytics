@@ -2,12 +2,12 @@
 
 ## Overview
 
-The Wikipedia Analytics is a web application that displays page view statistics for Wikipedia articles. It is a full stack app built with `TypeScript`, featuring a  a frontend built with `HTML`, `Tailwind CSS`, and `Chart.js`, and a backend powered by `Node.js`, `Express.js`, and `Redis`. The application fetches data from the `Wikimedia API`, visualizes it in grouped bar charts, and supports period-based filtering (e.g., 30, 90, 365 days) with frontend and backend caching for performance.
+The Wikipedia Analytics is a web application that displays page view statistics for Wikipedia articles. It is a full stack app built with `TypeScript`, featuring a frontend built with `HTML`, `Tailwind CSS`, and `Chart.js`, and a backend powered by `Node.js`, `Express.js`, and `Redis`. The application fetches data from the `Wikimedia API`, visualizes it in grouped bar charts, and supports period-based filtering (e.g., 30, 90, 365 days) with frontend and backend caching for performance.
 
 
 ## Prerequisites
 
-- **Node.js**: Required for running the app. Version 18 or higher recommended.
+- **Node.js and NPM**: Required for running the app. Version 18 or higher recommended for Node.js.
 - **Git**: For cloning and managing the repository.
 - **Redis**: For server-side caching.
 

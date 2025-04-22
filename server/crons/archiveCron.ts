@@ -5,13 +5,13 @@ import cache from '../services/cache';
 import logger from '../services/logger';
 import { isNonEmptyString } from '../utils/typeGuards';
 import { validateEnvironmentVariables } from './utils/validation';
+import { CRON_JOB_FREQUENCY } from '../constants/configs';
 
 const validationResult = validateEnvironmentVariables();
 
 if (validationResult) {
 
   const { accessKeyId, secretAccessKey, bucketName, region } = { ...validationResult };
-
 
   // Configure AWS SDK with environment variables
   const s3 = new S3Client({
@@ -26,8 +26,8 @@ if (validationResult) {
     const command = new PutObjectCommand({
       Bucket: bucketName,
       Key: `archive-${Date.now()}.json`,
-      Body: data,
       ContentType: 'application/json',
+      Body: data,
     });
 
     try {
@@ -39,7 +39,7 @@ if (validationResult) {
 
   }
 
-  cron.schedule('* * * * *', async () => {
+  cron.schedule(CRON_JOB_FREQUENCY, async () => {
     logger.info('Running archive cron job');
     const cachedData = await cache.getAll(false);
 

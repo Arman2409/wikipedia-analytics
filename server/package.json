@@ -6,7 +6,8 @@
     "start": "node ./dist/server.js",
     "start:dev": "nodemon ./dist/server.js",
     "build": "tsup",
-    "build:dev": "tsup --watch"
+    "build:dev": "tsup --watch",
+    "typecheck": "tsc"
   },
   "peerDependencies": {
     "typescript": "^5"

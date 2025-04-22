@@ -12,5 +12,6 @@ export enum ErrorMessage {
     MISSING_GET_VIEWS_QUERY_PARAMS = "Missing query parameter: 'period' or 'name'",
     SERVER_ERROR = "Something went wrong. Please try again later.",
     FAILED_TO_GET_VIEWS = "Failed to retrieve page views",
+    ROUTE_NOT_FOUND = "Route not found",
     RESOURCE_NOT_FOUND = "Resource not found",
 }

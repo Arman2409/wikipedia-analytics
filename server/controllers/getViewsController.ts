@@ -6,7 +6,6 @@ import getViewsModel from "../models/getViewsModel";
 import { handleGetViewsQueryValidation } from "./utils/validation";
 
 
-
 const getViewsController = async (
     req: Request,
     res: Response) => {

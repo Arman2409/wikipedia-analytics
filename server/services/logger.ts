@@ -1,5 +1,12 @@
 import chalk from 'chalk';
 
+interface Logger {
+  info(message: string): void;
+  error(message: string, err?: Error | unknown): void;
+  warn(message: string): void;
+  debug(message: string): void;
+}
+
 class Logger {
   private getTimestamp() {
     return new Date().toISOString();

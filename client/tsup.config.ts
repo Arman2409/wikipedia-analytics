@@ -10,4 +10,7 @@ export default defineConfig({
   minify: true,
   bundle: true,
   platform: 'browser',
+  define: {
+    'process.env.BASE_API_URL': JSON.stringify(process.env.BASE_API_URL),
+  }
 });

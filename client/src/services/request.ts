@@ -1,9 +1,11 @@
 import axios, { type AxiosInstance } from 'axios';
 
-import { BASE_API_URL, WIKIPEDIA_API_URL } from '../constants/configs';
+import { WIKIPEDIA_API_URL } from '../constants/configs';
+import type { PageViewsResponse } from '../types/global';
+
 
 interface RequestHandler {
-    getPageData(name: string, period: string): Promise<unknown[]>;
+    getPageData(name: string, period: string): Promise<PageViewsResponse>;
     getPageSuggestions(query: string): Promise<string[]>;
 }
 
@@ -13,7 +15,7 @@ class RequestHandler {
 
     private constructor() {
         this.axiosInstance = axios.create({
-            baseURL: BASE_API_URL,
+            baseURL: process.env.BASE_API_URL,
         });
     }
 
@@ -21,14 +23,14 @@ class RequestHandler {
         if (!RequestHandler.instance) {
             RequestHandler.instance = new RequestHandler();
         }
-        
+
         return RequestHandler.instance;
     }
 
     async getPageData(
-        name: string, 
+        name: string,
         period: string
-    ): Promise<any> {
+    ): Promise<PageViewsResponse> {
         try {
             const getViewParams = new URLSearchParams();
             getViewParams.set("name", name);
@@ -40,12 +42,16 @@ class RequestHandler {
         } catch (error) {
             console.error('Error fetching page views:', error);
 
-            return [];
+            return {
+                labels: [],
+                views: []
+            };
         }
     }
 
-    // Wikipedia API for page suggestions
-    async getPageSuggestions(query: string): Promise<string[]> {
+    async getPageSuggestions(
+        query: string
+    ): Promise<string[]> {
         try {
             const response = await axios.get(
                 WIKIPEDIA_API_URL + `?action=opensearch&search=${encodeURIComponent(query)}&limit=10&namespace=0&format=json&origin=*`

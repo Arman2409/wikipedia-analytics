@@ -38,8 +38,6 @@ function formatTimestamp(
     const day = parseInt(timestamp.slice(6, 8), 10);
     
     return String(day);
-    
-
   } else if (granularity === 'weekly') {
 
     const day = parseInt(timestamp.slice(6, 8), 10);
@@ -52,6 +50,5 @@ function formatTimestamp(
     return String(month);
   }
 
-  throw new Error(`Unsupported granularity: ${granularity}`);
+  return "";
 }
-

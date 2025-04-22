@@ -16,6 +16,12 @@ The `client` directory contains the frontend code for the Wikipedia Analytics ap
 npm install
 ```
 
+3. Set up the environment variables:
+  
+```bash 
+export BASE_API_URL=<your-api-url>
+```
+
 3. **Run the prebuild commands**: Create the folders for static files:
 
 ```bash
@@ -63,6 +69,7 @@ client/
 - `npm run build:tailwind:dev`: Compiles Tailwind CSS with watch mode for development.
 - `npm run prebuild:js`: Creates the `dist/js` directory for JavaScript output.
 - `npm run prebuild:tailwind`: Creates the `dist/styles` directory for CSS output.
+- `npm run typecheck`: Implements TypeScript checking.
 
 
 ## Notes

@@ -1,13 +1,16 @@
 import { createClient, type RedisClientType } from "redis";
 
 import { DEFAULT_TTL_IN_MINUTES } from "../constants/configs";
+import { environmentErrors } from "../constants/environment";
 import { safeParse } from "../utils/helpers";
+import { isNonEmptyString } from "../utils/typeGuards";
 import logger from "./logger";
-import { EnvironmentErrors } from "../constants/environment";
 
 interface RedisClient {
-    set(key: string, value: unknown, identificator?: string, ttlInMinutes?: number): Promise<void>;
-    remove(key: string, identificator?: string): Promise<void>;
+    get<T = unknown>(key: string, prefix?: string, identificator?: string | number): Promise<T | void>
+    set(key: string, value: unknown, prefix?: string, identificator?: string, ttlInMinutes?: number): Promise<void>;
+    getAll(asJson: boolean): Promise<Record<string, unknown> | string>;
+    remove(key: string, prefix?: string, identificator?: string): Promise<void>;
     disconnect(): Promise<void>;
 }
 
@@ -18,8 +21,15 @@ class RedisClient {
     private constructor() {
         if (!this.redisClient) {
             try {
+                const redisUrl = process.env.REDIS_URL;
+
+                if (!isNonEmptyString(redisUrl)) {
+                    logger.error(environmentErrors.MISSING_REDIS_ENV_VARIABLE);
+                    process.exit(1);
+                }
+
                 const redisClient = createClient({
-                    url: process.env.REDIS_URL,
+                    url: redisUrl,
                 })
 
                 // Connect to Redis 
@@ -49,14 +59,16 @@ class RedisClient {
 
     private getStorageKey(
         key: string,
+        prefix?: string,
         identificator?: string | number
     ): string {
-        return key + (identificator ? `_${identificator}` : '');
+        return `${prefix}_${key}${identificator ? `_${identificator}` : ''}`;
     }
 
     async set(
         key: string,
         value: unknown,
+        prefix?: string,
         identificator?: string | number,
         ttlInMinutes: number = DEFAULT_TTL_IN_MINUTES
     ): Promise<void> {
@@ -65,7 +77,7 @@ class RedisClient {
             return;
         }
 
-        const storageKey = this.getStorageKey(key, identificator);
+        const storageKey = this.getStorageKey(key, prefix, identificator);
 
         try {
             await this.redisClient.set(
@@ -82,6 +94,7 @@ class RedisClient {
 
     async get<T = unknown>(
         key: string,
+        prefix?: string,
         identificator?: string | number,
     ): Promise<T | void> {
         if (!this.redisClient) {
@@ -90,7 +103,7 @@ class RedisClient {
         }
 
         try {
-            const storageKey = this.getStorageKey(key, identificator);
+            const storageKey = this.getStorageKey(key, prefix, identificator);
 
             const result = await this.redisClient.get(storageKey);
             if (!result) return;
@@ -102,28 +115,30 @@ class RedisClient {
     }
 
     async getAll(
-        getJson: boolean = true
+        asJson: boolean = true
     ): Promise<Record<string, unknown> | string> {
         if (!this.redisClient) {
             logger.warn("Redis not connected!");
-            return getJson ? {} : "";
+            return asJson ? {} : "";
         }
 
         try {
             const keys = await this.redisClient.keys('*');
 
             if (!keys.length) {
-                return getJson ? {} : "";
+                return asJson ? {} : "";
             }
 
             const values = await this.redisClient.mGet(keys);
 
 
-            if (getJson) {
+            if (asJson) {
                 const result: Record<string, unknown> = {};
 
                 keys.forEach((key, index) => {
+                    if (!isNonEmptyString(key)) return;
                     const raw = values[index];
+
                     if (raw !== null) {
                         result[key] = safeParse(String(raw));
                     }
@@ -133,9 +148,11 @@ class RedisClient {
             } else {
                 let stringJson: string = "{";
 
-                keys.forEach((key, i) => {
-                    logger.info(`Key: ${key}`);
-                    const value = values[i];
+                keys.forEach((key, index) => {
+                    if (!isNonEmptyString(key)) return;
+
+                    const value = values[index];
+
                     if (value !== null) {
                         stringJson += `\"${key}\":${value},`;
                     }
@@ -153,6 +170,7 @@ class RedisClient {
 
     async remove(
         key: string,
+        prefix?: string,
         identificator?: string,
     ): Promise<void> {
         if (!this.redisClient) {
@@ -160,7 +178,7 @@ class RedisClient {
             return;
         }
 
-        const storageKey = this.getStorageKey(key, identificator);
+        const storageKey = this.getStorageKey(key, prefix, identificator);
 
         try {
             await this.redisClient.del(storageKey);

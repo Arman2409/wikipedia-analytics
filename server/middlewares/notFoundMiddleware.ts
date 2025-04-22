@@ -7,7 +7,7 @@ const notFoundMiddleware = (
     res: Response,
 ): void => {
     res.status(StatusCode.NOT_FOUND).json({
-        error: ErrorMessage.RESOURCE_NOT_FOUND
+        error: ErrorMessage.ROUTE_NOT_FOUND
     });
 }
 

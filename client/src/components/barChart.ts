@@ -3,6 +3,7 @@ import Chart from 'chart.js/auto';
 import { getCssVariable } from '../utils/helpers';
 import { AVAILABLE_COLORS_FOR_CHART } from '../constants/constants';
 
+
 const colors: string[] = [];
 
 AVAILABLE_COLORS_FOR_CHART.forEach(color => {
@@ -12,9 +13,9 @@ AVAILABLE_COLORS_FOR_CHART.forEach(color => {
 const borderColors = [...colors];
 borderColors.push(...borderColors.splice(0, 1));
 
-const canvasElement = document.getElementById('myChart') as HTMLCanvasElement;
+const canvasElement = document.getElementById('bar-chart') as HTMLCanvasElement;
 
-const myChart = new Chart(canvasElement, {
+const barChart = new Chart(canvasElement, {
     type: 'bar',
     data: {
         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
@@ -39,7 +40,11 @@ export const updateChart = (
     labels: string[],
     views: number[]
 ) => {
-    myChart.data.labels = labels;
-    myChart.data.datasets[0].data = views;
-    myChart.update();
+    barChart.data.labels = labels;
+
+    if(barChart.data.datasets[0]) {
+        barChart.data.datasets[0].data = views;
+    }
+   
+    barChart.update();
 }
