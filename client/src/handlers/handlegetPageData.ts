@@ -1,19 +1,18 @@
+import { GET_PAGE_CHACHE_PREFIX } from '../constants/constants';
+import { getPageName } from '../utils/helpers';
 import RequestHandler from '../services/request';
 import LocalStorageCacheHandler from '../services/cache';
 import store from "../state/store";
 import { updateChart } from "../components/barChart";
-import { getPageName } from './helpers';
 import { toggleLoading } from '../components/loading';
 import type { PageViewsResponse } from "../types/global";
 
 
 const { getSelectedPage, getSelectedPeriod } = store;
 
-const cache = new LocalStorageCacheHandler('page_view_');
+const cache = new LocalStorageCacheHandler(GET_PAGE_CHACHE_PREFIX);
 
-const statisticsPageName = document.querySelector(".statistics-page-name") as HTMLSpanElement;
-
-export const handleGetPageData = async (
+const handleGetPageData = async (
     selectedPeriod?: string,
     selectedPage?: string,
 ) => {
@@ -37,22 +36,25 @@ export const handleGetPageData = async (
         }
 
         // Update the chart 
-        procesGetPageResult(result, selectedPage, updateChart)
+        processGetPageResult(result, selectedPage, updateChart)
     } catch (error) {
         console.error('Error handling period change:', error);
     }
 }
-export const procesGetPageResult = (
+
+const statisticsPageName = document.querySelector(".statistics-page-name") as HTMLSpanElement;
+
+function processGetPageResult(
     result: PageViewsResponse,
     selectedPage: string,
-    updateChart: (labels: string[], views: number[]) => void
-) => {
+    updateChart: (data: PageViewsResponse) => void
+) {
     if (result) {
-        const { labels, views } = { ...result };
-
         if (statisticsPageName) statisticsPageName.innerHTML = getPageName(selectedPage);
 
         toggleLoading(false);
-        updateChart(labels, views);
+        updateChart(result);
     }
 }
+
+export default handleGetPageData;

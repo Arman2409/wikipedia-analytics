@@ -1,7 +1,7 @@
-const loading = document.querySelector('.loading') as HTMLDivElement;
+const loadingDemo = document.querySelector('.loading') as HTMLDivElement;
 
 export const toggleLoading = (
     show: boolean
 ) => {
-    loading.style.display = show ? 'flex' : 'none';
+    loadingDemo.style.display = show ? 'flex' : 'none';
 }

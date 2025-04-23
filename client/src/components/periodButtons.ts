@@ -1,29 +1,33 @@
+import { INITIAL_SELECTED_PERIOD } from "../constants/configs";
 import { CLICKED_BUTTON_CLASSLIST } from "../constants/constants";
+import handleGetPageData from "../handlers/handlegetPageData";
 
 
 const periodsButtons = document.querySelectorAll('.period-btn');
-
-let onPeriodSelected: ((period: string) => void) | null = null;
-
-// Function to detect period selection externally 
-export function setOnPeriodSelected(callback: (period: string) => void) {
-    onPeriodSelected = callback;
-}
 
 // Set up click event for each button 
 periodsButtons.forEach((button) => {
     button.addEventListener('click', () => {
         const selectedPeriod = button.getAttribute('data-period');
-        updateClickedButton(selectedPeriod as string);
 
-        // Call period selection callback
-        if (onPeriodSelected) {
-            onPeriodSelected(selectedPeriod as string); // Call the callback
+        if (selectedPeriod) {
+            updateClickedButton(selectedPeriod);
+
+            handleGetPageData(selectedPeriod);
         }
     });
-})
+});
 
-export function updateClickedButton(period: number | string) {
+// Get Main page data for initial view 
+(async function getInitialData() {
+    updateClickedButton(INITIAL_SELECTED_PERIOD);
+
+    handleGetPageData();
+})()
+
+export function updateClickedButton(
+    period: number | string
+) {
     const allPeriodButtons = document.querySelectorAll(".period-btn");
 
     allPeriodButtons.forEach((button) => {

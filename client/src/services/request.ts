@@ -32,19 +32,26 @@ class RequestHandler {
         period: string
     ): Promise<PageViewsResponse> {
         try {
+            // Construct the query params 
             const getViewParams = new URLSearchParams();
             getViewParams.set("name", name);
-            getViewParams.set("period", period)
+            getViewParams.set("period", period);
 
             const result = await this.axiosInstance.get(`/get_views?${getViewParams}`)
-
+            
             return result.data;
         } catch (error) {
             console.error('Error fetching page views:', error);
 
             return {
-                labels: [],
-                views: []
+                current: {
+                    labels: [],
+                    views: []
+                },
+                previous: {
+                    labels: [],
+                    views: []
+                }
             };
         }
     }
