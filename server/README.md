@@ -8,15 +8,17 @@ The `server` directory contains the backend code for the application. It is buil
 
 ## Setup
 
-1. **Install Node.js and NPM**: Ensure Node.js and NPM aren installed. 
+1. **Install Node.js and NPM**: Ensure Node.js and NPM are installed. 
 
-2. **Install Dependencies**: Run in the `server` directory:
+2. **Install and set up Redis**: Ensure you have Redis installed or you can use online platforms.
+
+3. **Install dependencies**: Run in the `server` directory:
 
 ```bash
 npm install
 ```
 
-3. Set up the environment variables in the .env file(you can find them in the .env.example file as well):
+4. Set up the environment variables in the .env file(you can find them in the .env.example file as well):
   
 ```
 PORT=your-port
