@@ -50,7 +50,9 @@ server/
 ├── models/                 # Data models and logic
 │   ├── utils/              # Model utilities
 ├── services/               # Business logic
+│   ├── utils/              # Service utilities
 ├── types/                  # TypeScript types
+├── crons/                  # Cron jobs
 ├── utils/                  # General utilities
 ├── server.ts               # Server entry point
 ├── package.json            # Dependencies and scripts

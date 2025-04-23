@@ -47,6 +47,7 @@ client/
 ├── styles/                 # CSS styles
 ├── index.html              # Entry HTML file
 ├── package.json            # Dependencies and scripts
+├── tsconfig.json           # TypeScript configuration
 ├── tsup.config.ts          # TSUP configuration
 ```
 
@@ -54,7 +55,7 @@ client/
 ## Key Scripts
 
 - `npm run build`: Builds the project.
-- `npm run prebuild`: Creates the `dist/js` and `dist/css/` directory for JavaScript output.
+- `npm run prebuild`: Creates the `dist/js/` and `dist/css/` directories for the output.
 - `npm run copy:static`: Copies `index.html` and `assests` to `dist` folder.
 - `npm run build:js`: Builds the TypeScript code using TSUP.
 - `npm run build:js:dev`: Builds the TypeScript code with watch mode for development.
@@ -66,7 +67,7 @@ client/
 
 ## Notes
 
-- Tailwind CSS is configured in `styles/tailwind-input.css`, with output generated to `dist/styles/bundle.css`.
+- Tailwind CSS is configured in `styles/input.css`, with output generated to `dist/styles/bundle.css`.
 - API requests are managed in `src/services/request.ts` using Axios, with caching in `src/services/cache.ts`.
 - State management is handled in `src/state/store.ts`.
 - Ensure the server is running (see `server/README.md`) for API connectivity.
