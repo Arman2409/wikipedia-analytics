@@ -4,6 +4,8 @@ export const DEFAULT_TTL_IN_MINUTES = 120;
 
 export const DEFAULT_PORT = 3030;
 
-export const CRON_JOB_FREQUENCY = "* * * * *";
+export const CRON_JOB_FREQUENCY = "0 0 * * *";
 
 export const PAGE_VIEW_CACHE_PREFIX = "page-view";
+
+export const DEFAULT_AWS_REGION = "us-east-1";

@@ -17,6 +17,8 @@ if (aws.getIsValidated()) {
   
       if (isNonEmptyString(cachedData)) {
         await aws.uploadJsonToS3(cachedData);
+
+        await cache.clear();
       }
     } catch (err) {
       logger.error(ArchiveCronMessages.ARCHIVE_CRON_FAILED, err);

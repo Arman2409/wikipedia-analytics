@@ -12,3 +12,17 @@ export enum awsErrorsMessages {
 export enum RequestMessages {
     FAILED_TO_RETRIEVE_DATA = "Error while fetching data",
 }
+
+export enum RedisMessages {
+    CONNECTED = "Connected to Redis",
+    CONNECTION_FAILED = "Failed to connect to Redis",
+    FAILED_TO_CREATE_REDIS_CLIENT = "Failed to create Redis client",
+    NOT_CONNECTED = "Redis not connected!",
+    SET_FAILED = "Failed to set value in Redis",
+    GET_ALL_FAILED = "Failed to get all values from Redis",
+    CLEAR_FAILED = "Failed to clear Redis",
+    CACHE_CLEARED = "Cache cleared",
+    DISCONNECT_FAILED = "Failed to disconnect",
+    GET_FAILED = "Failed to get value from Redis",
+    DELETE_FAILED = "Failed to delete value from Redis",
+}

@@ -1,5 +1,4 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 
 import "./crons/archiveCron";
@@ -12,7 +11,6 @@ import healthCheckController from "./controllers/healthCheckController";
 
 
 // Set up
-dotenv.config();
 const app = express();
 
 
@@ -28,7 +26,6 @@ app.get("/get_views", getViewsController);
 
 // Catch-all middleware
 app.use(notFoundMiddleware);
-
 
 // Start the server
 const port = process.env.PORT || DEFAULT_PORT;

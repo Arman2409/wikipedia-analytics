@@ -1,6 +1,7 @@
 import { createClient, type RedisClientType } from "redis";
 
 import { DEFAULT_TTL_IN_MINUTES } from "../constants/configs";
+import { RedisMessages } from "../constants/services";
 import { environmentErrors } from "../constants/environment";
 import { safeParse } from "../utils/helpers";
 import { isNonEmptyString } from "../utils/typeGuards";
@@ -10,6 +11,7 @@ interface RedisClient {
     get<T = unknown>(key: string, prefix?: string, identificator?: string | number): Promise<T | void>
     set(key: string, value: unknown, prefix?: string, identificator?: string, ttlInMinutes?: number): Promise<void>;
     getAll(asJson: boolean): Promise<Record<string, unknown> | string>;
+    clear(): Promise<void>;
     remove(key: string, prefix?: string, identificator?: string): Promise<void>;
     disconnect(): Promise<void>;
 }
@@ -35,16 +37,16 @@ class RedisClient {
                 // Connect to Redis 
                 redisClient.connect()
                     .then(() => {
-                        logger.info("Connected to Redis");
+                        logger.info(RedisMessages.CONNECTED);
                     })
                     .catch(err => {
-                        logger.error("Failed to connect to Redis", err);
+                        logger.error(RedisMessages.CONNECTION_FAILED, err);
                         process.exit(1);
                     })
 
                 this.redisClient = redisClient as RedisClientType;
             } catch (err) {
-                logger.error("Failed to connect to Redis", err);
+                logger.error(RedisMessages.FAILED_TO_CREATE_REDIS_CLIENT, err);
             }
         }
     }
@@ -73,7 +75,7 @@ class RedisClient {
         ttlInMinutes: number = DEFAULT_TTL_IN_MINUTES
     ): Promise<void> {
         if (!this.redisClient) {
-            logger.warn("Redis not connected!");
+            logger.warn(RedisMessages.NOT_CONNECTED);
             return;
         }
 
@@ -88,7 +90,7 @@ class RedisClient {
                 }
             );
         } catch (err) {
-            logger.error("Failed to set value in Redis", err);
+            logger.error(RedisMessages.SET_FAILED, err);
         }
     }
 
@@ -98,7 +100,7 @@ class RedisClient {
         identificator?: string | number,
     ): Promise<T | void> {
         if (!this.redisClient) {
-            logger.warn("Redis not connected!");
+            logger.warn(RedisMessages.NOT_CONNECTED);
             return;
         }
 
@@ -110,7 +112,7 @@ class RedisClient {
 
             return safeParse(result);
         } catch (err) {
-            logger.error("Failed to set value in Redis", err);
+            logger.error(RedisMessages.GET_FAILED, err);
         }
     }
 
@@ -118,7 +120,7 @@ class RedisClient {
         asJson: boolean = true
     ): Promise<Record<string, unknown> | string> {
         if (!this.redisClient) {
-            logger.warn("Redis not connected!");
+            logger.warn(RedisMessages.NOT_CONNECTED);
             return asJson ? {} : "";
         }
 
@@ -166,7 +168,7 @@ class RedisClient {
                 return stringJson;
             }
         } catch (err) {
-            logger.error("Failed to get all values from Redis", err);
+            logger.error(RedisMessages.GET_ALL_FAILED, err);
             return {};
         }
     }
@@ -177,7 +179,7 @@ class RedisClient {
         identificator?: string,
     ): Promise<void> {
         if (!this.redisClient) {
-            logger.warn("Redis not connected!");
+            logger.warn(RedisMessages.NOT_CONNECTED);
             return;
         }
 
@@ -186,7 +188,22 @@ class RedisClient {
         try {
             await this.redisClient.del(storageKey);
         } catch (err) {
-            logger.error("Failed to set value in Redis", err);
+            logger.error(RedisMessages.DELETE_FAILED, err);
+        }
+    }
+
+
+    async clear(): Promise<void> {
+        if (!this.redisClient) {
+            logger.warn(RedisMessages.NOT_CONNECTED);
+            return;
+        }
+
+        try {
+            await this.redisClient.flushAll();
+            logger.info(RedisMessages.CACHE_CLEARED);
+        } catch (err) {
+            logger.error(RedisMessages.CLEAR_FAILED, err);
         }
     }
 
@@ -195,10 +212,10 @@ class RedisClient {
             try {
                 await this.redisClient.disconnect();
             } catch (err) {
-                logger.warn("Failed to disconnect");
+                logger.warn(RedisMessages.DISCONNECT_FAILED);
             }
         } else {
-            logger.warn("Redis not connected!");
+            logger.warn(RedisMessages.NOT_CONNECTED);
         }
     }
 }

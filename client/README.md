@@ -16,10 +16,10 @@ The `client` directory contains the frontend code for the Wikipedia Analytics ap
 npm install
 ```
 
-3. Set up the environment variables:
+3. Set up the environment variables in the .env file(you can find them in the .env.example file as well):
   
-```bash 
-export BASE_API_URL=<your-api-url>
+```
+BASE_API_URL=your-api-url
 ```
 
 3. **Build the project**: Compile and bundle the TypeScript code and Tailwind CSS:

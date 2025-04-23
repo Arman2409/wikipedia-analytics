@@ -16,11 +16,15 @@ The `server` directory contains the backend code for the application. It is buil
 npm install
 ```
 
-3. Set up the environment variables(you can find them in the .env.example file as well):
+3. Set up the environment variables in the .env file(you can find them in the .env.example file as well):
   
 ```
-PORT=<your-port>
-REDIS_URL=<your-redis-url>
+PORT=your-port
+REDIS_URL=your-redis-url
+AWS_ACCESS_KEY_ID=your-access-key-id
+AWS_SECRET_ACCESS_KEY=your-secret-access-key
+AWS_S3_BUCKET_NAME=your-s3-bucket-name
+AWS_REGION=your-aws-region
 ```
 
 4. **Build the Project**: Compile the code:
