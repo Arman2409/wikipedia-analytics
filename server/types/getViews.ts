@@ -18,6 +18,11 @@ export interface PageViewsRetrievedData {
 }
 
 export interface PageViewsResponse {
+    current: ChartData;
+    previous: ChartData;
+}
+
+export interface ChartData {
     labels: string[];
     views: number[];
 }

@@ -22,24 +22,13 @@ npm install
 export BASE_API_URL=<your-api-url>
 ```
 
-3. **Run the prebuild commands**: Create the folders for static files:
+3. **Build the project**: Compile and bundle the TypeScript code and Tailwind CSS:
 
 ```bash
-npm run prebuild:js;
-npm run prebuild:tailwind
+npm run build
 ```
 
-4. **Build the project**: Compile and bundle the TypeScript code and Tailwind CSS:
-
-```bash
-npm run build:js;
-npm run build:tailwind
-# or for development
-npm run build:js:dev;
-npm run build:tailwind:dev
-```
-
-5. Open the ./client/index.html file in your web browser to view the application.
+4. Open the ./dist/index.html file in your web browser to view the application.
 
 
 ## Directory Structure
@@ -48,10 +37,11 @@ npm run build:tailwind:dev
 client/
 ├── assets/                 # Static assets
 ├── src/                    # Source code
-│   ├── components/         # Reusable UI components
+│   ├── components/         # UI components, DOM manipulation
 │   ├── constants/          # Configuration and constants
 │   ├── services/           # API and caching logic
 │   ├── state/              # State management
+│   ├── handlers/           # Functions for handling data
 │   ├── types/              # TypeScript types
 │   ├── utils/              # Utility functions
 ├── styles/                 # CSS styles
@@ -63,18 +53,20 @@ client/
 
 ## Key Scripts
 
+- `npm run build`: Builds the project.
+- `npm run prebuild`: Creates the `dist/js` and `dist/css/` directory for JavaScript output.
+- `npm run copy:static`: Copies `index.html` and `assests` to `dist` folder.
 - `npm run build:js`: Builds the TypeScript code using TSUP.
 - `npm run build:js:dev`: Builds the TypeScript code with watch mode for development.
-- `npm run build:tailwind`: Compiles Tailwind CSS to `dist/styles/tailwind-output.css`.
+- `npm run build:tailwind`: Compiles Tailwind CSS to `dist/styles/bundle.css`.
 - `npm run build:tailwind:dev`: Compiles Tailwind CSS with watch mode for development.
-- `npm run prebuild:js`: Creates the `dist/js` directory for JavaScript output.
 - `npm run prebuild:tailwind`: Creates the `dist/styles` directory for CSS output.
 - `npm run typecheck`: Implements TypeScript checking.
 
 
 ## Notes
 
-- Tailwind CSS is configured in `styles/tailwind-input.css`, with output generated to `dist/styles/tailwind-output.css`.
+- Tailwind CSS is configured in `styles/tailwind-input.css`, with output generated to `dist/styles/bundle.css`.
 - API requests are managed in `src/services/request.ts` using Axios, with caching in `src/services/cache.ts`.
 - State management is handled in `src/state/store.ts`.
 - Ensure the server is running (see `server/README.md`) for API connectivity.

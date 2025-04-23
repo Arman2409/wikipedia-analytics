@@ -62,7 +62,7 @@ class RedisClient {
         prefix?: string,
         identificator?: string | number
     ): string {
-        return `${prefix}_${key}${identificator ? `_${identificator}` : ''}`;
+        return `${prefix ? `${prefix}_` : ''}${key}${identificator ? `_${identificator}` : ''}`;
     }
 
     async set(
@@ -84,7 +84,7 @@ class RedisClient {
                 storageKey,
                 JSON.stringify(value),
                 {
-                    EX: ttlInMinutes * 60 * 1000,
+                    EX: ttlInMinutes * 60,
                 }
             );
         } catch (err) {
@@ -123,12 +123,15 @@ class RedisClient {
         }
 
         try {
+
+            // Get all the keys
             const keys = await this.redisClient.keys('*');
 
             if (!keys.length) {
                 return asJson ? {} : "";
             }
 
+            // Get all the data by keys 
             const values = await this.redisClient.mGet(keys);
 
 

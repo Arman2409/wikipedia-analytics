@@ -1,9 +1,9 @@
-import { awsEnvMessages } from "../../constants/environment";
-import logger from "../../services/logger";
+import { awsEnvMessages } from "../../constants/services";
+import logger from "../logger";
 import type { ArchiveCronValidationResult } from "../../types/crons";
 
 
-export const validateEnvironmentVariables = (): ArchiveCronValidationResult|void => {
+export const validateAwsEnvironmentVariables = (): ArchiveCronValidationResult|void => {
 
     // Get environment variables
     const region = process.env.AWS_REGION || 'us-east-1';

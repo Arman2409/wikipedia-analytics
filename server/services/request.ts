@@ -1,7 +1,9 @@
 import axios, { type AxiosInstance } from 'axios';
 
 import { WIKIPEDIA_API_URL } from '../constants/configs';
+import { RequestMessages } from '../constants/services';
 import { getFormattedDate } from '../utils/helpers';
+import logger from './logger';
 import type { GetPageViewsDto, PageViewsRetrievedData } from '../types/getViews';
 
 interface RequestHandler {
@@ -34,7 +36,7 @@ class RequestHandler {
             let { name, period, granularity } = { ...argsObj };
 
             const currentDate = Date.now();
-            const startDate = currentDate - (period * 24 * 60 * 60 * 1000);
+            const startDate = currentDate - (period * 24 * 60 * 60 * 1000 * 2);
 
             if (granularity === "weekly") granularity = "daily";
 
@@ -42,8 +44,10 @@ class RequestHandler {
 
             const result = await this.axiosInstance.get(url)
 
+        
             return result.data;
         } catch (err) {
+            logger.error(RequestMessages.FAILED_TO_RETRIEVE_DATA, err)
 
             return null;
         }

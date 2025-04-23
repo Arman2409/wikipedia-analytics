@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="./assets/favicon.png" type="image/png">
   <title>Wikipedia Analytics</title>
-  <link href="./dist/styles/tailwind-output.css" rel="stylesheet">
-  <link href="./styles/global.css" rel="stylesheet">
+  <link href="./dist/styles/bundle.css" rel="stylesheet">
+  <link href="./styles/bundle.css" rel="stylesheet">
 </head>
 
 <body>
@@ -67,5 +67,9 @@
 
 
 
-  <script src="./dist/js/index.global.js" type="module"></script>
+  <script type="module">
+    const isDist = location.pathname.includes('dist');
+    import(isDist ? './js/index.global.js' : './dist/js/index.global.js')
+      .catch((err) => console.error("Failed to load app", err));
+  </script>
 </body>

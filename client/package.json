@@ -2,14 +2,15 @@
   "name": "wikipedia-analytics-client",
   "type": "module",
   "private": true,
+  "main": "./dist/index.html",
   "scripts": {
-    "prebuild:tailwind": "mkdir -p ./dist/styles",
-    "prebuild:js": "mkdir -p ./dist/js",
-    "build:tailwind": "npx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./dist/styles/tailwind-output.css ",
-    "build:tailwind:dev": "npx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./dist/styles/tailwind-output.css --watch",
-    "build:css": "build:tailwind && cp ./styles/global.css ./dist/styles/global.css",
+    "prebuild": "mkdir -p ./dist/js ./dist/styles",
+    "build:tailwind": "npx @tailwindcss/cli -i ./styles/input.css -o ./dist/styles/bundle.css ",
+    "build:tailwind:dev": "npx @tailwindcss/cli -i ./styles/input.css -o ./dist/styles/bundle.css --watch",
     "build:js": "tsup",
     "build:js:dev": "tsup --watch",
+    "copy:static": "cp index.html ./dist/index.html && cp -r ./assets ./dist/assets",
+    "build": "npm run prebuild && npm run copy:static && npm run build:tailwind && npm run build:js",
     "typecheck": "tsc"
   },
   "peerDependencies": {

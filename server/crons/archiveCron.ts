@@ -1,51 +1,30 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import cron from 'node-cron';
 
+import { CRON_JOB_FREQUENCY } from '../constants/configs';
+import { ArchiveCronMessages } from '../constants/crons';
+import { isNonEmptyString } from '../utils/typeGuards';
 import cache from '../services/cache';
 import logger from '../services/logger';
-import { isNonEmptyString } from '../utils/typeGuards';
-import { validateEnvironmentVariables } from './utils/validation';
-import { CRON_JOB_FREQUENCY } from '../constants/configs';
+import aws from '../services/aws';
 
-const validationResult = validateEnvironmentVariables();
 
-if (validationResult) {
-
-  const { accessKeyId, secretAccessKey, bucketName, region } = { ...validationResult };
-
-  // Configure AWS SDK with environment variables
-  const s3 = new S3Client({
-    region,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
-  });
-
-  async function uploadToS3(data: string) {
-    const command = new PutObjectCommand({
-      Bucket: bucketName,
-      Key: `archive-${Date.now()}.json`,
-      ContentType: 'application/json',
-      Body: data,
-    });
-
-    try {
-      const result = await s3.send(command);
-      logger.info(`Uploaded to S3: Bucket="${bucketName}", Key="${command.input.Key}", ETag=${result.ETag}`);
-    } catch (err) {
-      logger.error('Failed to upload to S3:', err);
-    }
-
-  }
+// Set up the cron job if only the AWS was initialized properly 
+if (aws.getIsValidated()) {
 
   cron.schedule(CRON_JOB_FREQUENCY, async () => {
-    logger.info('Running archive cron job');
-    const cachedData = await cache.getAll(false);
-
-    if (isNonEmptyString(cachedData)) {
-      await uploadToS3(cachedData);
+    try {
+      const cachedData = await cache.getAll(false);
+  
+      if (isNonEmptyString(cachedData)) {
+        await aws.uploadJsonToS3(cachedData);
+      }
+    } catch (err) {
+      logger.error(ArchiveCronMessages.ARCHIVE_CRON_FAILED, err);
     }
-  });
-}
+   
+  })
 
+  logger.info(ArchiveCronMessages.ARCHIVE_CRON_CONFIGURED);
+} else {
+   logger.warn(ArchiveCronMessages.ARCHIVE_CRON_NOT_RUNNING)
+}
