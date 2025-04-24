@@ -13,14 +13,14 @@ export enum ErrorMessage {
     RESOURCE_NOT_FOUND = "Resource not found",
 }
 
-export enum GetViewsErrorMessages {
+export enum ViewsErrorMessages {
     WRONG_GET_VIEWS_QUERY_PARAMS = "Wrong query parameter type for 'period' or 'name'",
     MISSING_GET_VIEWS_QUERY_PARAMS = "Missing query parameter: 'period' or 'name'",
     FAILED_TO_GET_VIEWS = "Failed to retrieve page views",
 }
 
 
-export enum GetSuggestionsErrorMessages {
+export enum SuggestionsErrorMessages {
     WRONG_GET_SUGGESTIONS_QUERY_PARAMS = "Wrong query parameter type for 'page'",
     MISSING_GET_SUGGESTION_QUERY_PARAMS = "Missing 'page' query parameter",
     FAILED_TO_GET_SUGGESTIONS = "Failed to retrieve page views",

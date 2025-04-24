@@ -1,7 +1,5 @@
-import type { Response } from "express";
-
 import { SUGGESTIONS_CACHE_PREFIX } from "../constants/configs";
-import { ErrorMessage, GetSuggestionsErrorMessages, StatusCode } from "../constants/response";
+import { ErrorMessage, SuggestionsErrorMessages, StatusCode } from "../constants/response";
 import RequestHandler from "../services/request";
 import cache from "../services/cache";
 import logger from "../services/logger";
@@ -46,12 +44,12 @@ const getSuggestionsModel = async (
             json: result
         }
     } catch (err) {
-        logger.error(`${GetSuggestionsErrorMessages.FAILED_TO_GET_SUGGESTIONS}: ${err}`);
+        logger.error(`${SuggestionsErrorMessages.FAILED_TO_GET_SUGGESTIONS}: ${err}`);
 
         return {
             status: StatusCode.INTERNAL_SERVER_ERROR,
             json: {
-                error: GetSuggestionsErrorMessages.FAILED_TO_GET_SUGGESTIONS
+                error: SuggestionsErrorMessages.FAILED_TO_GET_SUGGESTIONS
             }
         }
     }

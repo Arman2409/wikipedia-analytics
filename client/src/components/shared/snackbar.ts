@@ -4,7 +4,7 @@ import { snackbarLevelColors } from "./utils/data";
 import type { SnackbarLevel } from "../../types/snackbar";
 
 
-const snackbar = document.querySelector('.snackbar') as HTMLDivElement;
+const snackbar = document.querySelector('#snackbar') as HTMLDivElement;
 
 export const showSnackbar = (
     message: string,

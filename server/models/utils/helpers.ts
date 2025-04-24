@@ -1,6 +1,6 @@
-import { granularityDays, periodsMap } from '../../controllers/utils/data';
+import { periodsMap } from '../../controllers/utils/data';
 import logger from '../../services/logger';
-import type { ChartData, Granularity, PageViewsItem, PageViewsResponse, Period } from '../../types/views';
+import type { ChartData, PageViewsItem, PageViewsResponse, Period } from '../../types/views';
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -17,7 +17,6 @@ export const transformPageViews = (
 
   const previousData = data.splice(0, data.length / 2);
 
-
   if (!granularity) {
     logger.error("Period not allowed. Allowed periods are: ", Array.from(periodsMap.keys()).join(", "));
     return {} as PageViewsResponse;
@@ -28,7 +27,9 @@ export const transformPageViews = (
 
   return {
     current,
-    previous,
+    previous: {
+      views: previous.views,
+    },
   };
 };
 

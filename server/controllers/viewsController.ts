@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 
-import { GetViewsErrorMessages, StatusCode } from "../constants/response";
+import { ViewsErrorMessages, StatusCode } from "../constants/response";
 import logger from "../services/logger";
 import viewsModel from "../models/viewsModel";
 import { handleGetViewsQueryValidation } from "./utils/validation";
@@ -22,10 +22,10 @@ const viewsController = async (
 
         res.status(status).json(json);
     } catch (err) {
-        logger.error(GetViewsErrorMessages.FAILED_TO_GET_VIEWS, err);
+        logger.error(ViewsErrorMessages.FAILED_TO_GET_VIEWS, err);
 
         res.status(StatusCode.INTERNAL_SERVER_ERROR).json({
-            error: GetViewsErrorMessages.FAILED_TO_GET_VIEWS
+            error: ViewsErrorMessages.FAILED_TO_GET_VIEWS
         });
     }
 }

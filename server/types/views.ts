@@ -23,6 +23,6 @@ export interface PageViewsResponse {
 }
 
 export interface ChartData {
-    labels: string[];
+    labels?: string[];
     views: number[];
 }

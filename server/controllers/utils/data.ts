@@ -6,9 +6,3 @@ export const periodsMap =  new Map<Period, Granularity>([
     [90, 'weekly'],
     [365, 'monthly']
 ]);
-
-export const granularityDays = new Map<Granularity, number>([ 
-   ["daily", 1],
-   ["weekly", 7],
-   ["monthly", 30],
-]);

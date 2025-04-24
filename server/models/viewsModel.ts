@@ -1,7 +1,5 @@
-import type { Response } from "express";
-
 import { PAGE_VIEW_CACHE_PREFIX } from "../constants/configs";
-import { ErrorMessage, GetViewsErrorMessages, StatusCode } from "../constants/response";
+import { ErrorMessage, ViewsErrorMessages, StatusCode } from "../constants/response";
 import RequestHandler from "../services/request";
 import cache from "../services/cache";
 import logger from "../services/logger";
@@ -12,7 +10,6 @@ import type { ModelReturnResult } from "../types/global";
 
 const viewsModel = async (
     validationResult: GetPageViewsDto,
-    res: Response,
 ): Promise<ModelReturnResult> => {
     try {
         const { name, period } = { ...validationResult };
@@ -51,12 +48,12 @@ const viewsModel = async (
             json: data
         }
     } catch (err) {
-        logger.error(`${GetViewsErrorMessages.FAILED_TO_GET_VIEWS}: ${err}`);
+        logger.error(`${ViewsErrorMessages.FAILED_TO_GET_VIEWS}: ${err}`);
 
         return {
             status: StatusCode.INTERNAL_SERVER_ERROR,
             json: {
-                error: GetViewsErrorMessages.FAILED_TO_GET_VIEWS
+                error: ViewsErrorMessages.FAILED_TO_GET_VIEWS
             }
         }
     }

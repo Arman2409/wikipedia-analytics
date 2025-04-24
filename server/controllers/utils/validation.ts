@@ -1,6 +1,6 @@
 import type { Response } from "express";
 
-import { GetSuggestionsErrorMessages, GetViewsErrorMessages, StatusCode } from "../../constants/response";
+import { SuggestionsErrorMessages, ViewsErrorMessages, StatusCode } from "../../constants/response";
 import { isNonEmptyString, isPositiveInteger } from "../../utils/typeGuards";
 import { periodsMap } from "./data";
 import type { GetPageViewsDto, Period } from "../../types/views";
@@ -16,14 +16,14 @@ export const handleGetViewsQueryValidation = (
 
     if (!period || !name) {
         res.status(StatusCode.BAD_REQUEST).json({
-            error: GetViewsErrorMessages.MISSING_GET_VIEWS_QUERY_PARAMS
+            error: ViewsErrorMessages.MISSING_GET_VIEWS_QUERY_PARAMS
         });
         return;
     }
 
     if (!isPositiveInteger(period) || !isNonEmptyString(name)) {
         res.status(StatusCode.BAD_REQUEST).json(
-            { error: GetViewsErrorMessages.WRONG_GET_VIEWS_QUERY_PARAMS }
+            { error: ViewsErrorMessages.WRONG_GET_VIEWS_QUERY_PARAMS }
         );
         return;
     }
@@ -51,14 +51,14 @@ export const handleGetSuggestionsQueryValidation = (
 
     if (!page) {
         res.status(StatusCode.BAD_REQUEST).json({
-            error: GetSuggestionsErrorMessages.MISSING_GET_SUGGESTION_QUERY_PARAMS
+            error: SuggestionsErrorMessages.MISSING_GET_SUGGESTION_QUERY_PARAMS
         });
         return;
     }
 
     if (!isNonEmptyString(page)) {
         res.status(StatusCode.BAD_REQUEST).json({
-            error: GetSuggestionsErrorMessages.WRONG_GET_SUGGESTIONS_QUERY_PARAMS
+            error: SuggestionsErrorMessages.WRONG_GET_SUGGESTIONS_QUERY_PARAMS
         });
         return;
     }
