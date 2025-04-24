@@ -4,21 +4,27 @@ import store from "../state/store";
 import handleGetPageData from "../handlers/handlegetPageData";
 
 
-const { updateSelectedPeriod } = {...store }
+const { updateSelectedPeriod, getSelectedPeriod } = {...store }
 
 const periodsButtons = document.querySelectorAll('.period-btn');
 
 // Set up click event for each button 
 periodsButtons.forEach((button) => {
     button.addEventListener('click', () => {
-        const selectedPeriod = button.getAttribute('data-period');
+        const buttonPeriod = button.getAttribute('data-period');
+        const selectedPeriod = getSelectedPeriod();
 
-        if (selectedPeriod) {
-            updateClickedButton(selectedPeriod);
-            updateSelectedPeriod(selectedPeriod);
+        // Check if the period is already selected 
+        if (buttonPeriod === selectedPeriod) {
+            return;
+        }
+
+        if (buttonPeriod) {
+            updateClickedButton(buttonPeriod);
+            updateSelectedPeriod(buttonPeriod);
 
             // Get page data
-            handleGetPageData(selectedPeriod);
+            handleGetPageData(buttonPeriod);
         }
     });
 });

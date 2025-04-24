@@ -1,6 +1,6 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
-import { awsErrorsMessages } from '../constants/services';
+import { AwsMessages } from '../constants/services';
 import logger from './logger';
 import { validateAwsEnvironmentVariables } from './utils/validation';
 
@@ -70,7 +70,7 @@ class AwsService {
 
             logger.info(`Uploaded to S3: Bucket="${bucketName}", Key="${command.input.Key}", ETag=${result.ETag}`);
         } catch (err) {
-            logger.error(awsErrorsMessages.FAILED_UPLOAD_TO_S3, err);
+            logger.error(AwsMessages.FAILED_UPLOAD_TO_S3, err);
         }
 
     }

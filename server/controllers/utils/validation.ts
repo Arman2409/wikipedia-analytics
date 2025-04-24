@@ -46,8 +46,6 @@ export const handleGetSuggestionsQueryValidation = (
     res: Response): GetSuggestionsDto | undefined => {
 
     const { page } = query;
-     console.log([{page}]);
-     
 
     if (!page) {
         res.status(StatusCodes.BAD_REQUEST).json({

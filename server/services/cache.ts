@@ -2,7 +2,7 @@ import { createClient, type RedisClientType } from "redis";
 
 import { DEFAULT_TTL_IN_MINUTES } from "../constants/configs";
 import { RedisMessages } from "../constants/services";
-import { environmentErrors } from "../constants/environment";
+import { EnvironmentErrors } from "../constants/environment";
 import { safeParse } from "../utils/helpers";
 import { isNonEmptyString } from "../utils/typeGuards";
 import logger from "./logger";
@@ -26,7 +26,7 @@ class RedisClient {
                 const redisUrl = process.env.REDIS_URL;
 
                 if (!isNonEmptyString(redisUrl)) {
-                    logger.error(environmentErrors.MISSING_REDIS_ENV_VARIABLE);
+                    logger.error(EnvironmentErrors.MISSING_REDIS_ENV_VARIABLE);
                     process.exit(1);
                 }
 

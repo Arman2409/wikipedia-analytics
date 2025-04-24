@@ -1,5 +1,5 @@
 import { DEFAULT_AWS_REGION } from "../../constants/configs";
-import { awsEnvMessages } from "../../constants/services";
+import { AwsMessages } from "../../constants/services";
 import logger from "../logger";
 import type { ArchiveCronValidationResult } from "../../types/crons";
 
@@ -14,17 +14,17 @@ export const validateAwsEnvironmentVariables = (): ArchiveCronValidationResult|v
 
     if (!accessKeyId || !secretAccessKey || !bucketName) {
         if (!accessKeyId) {
-            logger.warn(awsEnvMessages.MISSING_ACCESS_KEY_ID);
+            logger.warn(AwsMessages.MISSING_ACCESS_KEY_ID);
         }
         if (!secretAccessKey) {
-            logger.warn(awsEnvMessages.MISSING_SECRET_ACCESS_KEY);
+            logger.warn(AwsMessages.MISSING_SECRET_ACCESS_KEY);
         }
         if (!bucketName) {
-            logger.warn(awsEnvMessages.MISSING_BUCKET_NAME);
+            logger.warn(AwsMessages.MISSING_BUCKET_NAME);
         }
         
         // Warn that cron job won't run
-        logger.warn(awsEnvMessages.MISSING_AWS_ENV_FOR_ARCHIVE_CRON);
+        logger.warn(AwsMessages.MISSING_AWS_ENV_FOR_ARCHIVE_CRON);
 
         return;
     }

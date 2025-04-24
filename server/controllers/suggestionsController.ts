@@ -2,8 +2,8 @@ import type { Request, Response } from "express";
 
 import { SuggestionsErrorMessages, StatusCodes } from "../constants/response";
 import logger from "../services/logger";
-import { handleGetSuggestionsQueryValidation } from "./utils/validation";
 import suggestionsModel from "../models/suggestionsModel";
+import { handleGetSuggestionsQueryValidation } from "./utils/validation";
 
 
 const suggestionsController = async (

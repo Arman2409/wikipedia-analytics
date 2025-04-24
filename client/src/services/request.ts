@@ -39,9 +39,6 @@ class RequestHandler {
 
             const result = await this.axiosInstance.get(`/get_views?${getViewParams}`)
            
-            console.log("here");
-            // showSnackbar("Hello World")
-
             return result.data;
         } catch (error) {
             console.error('Error fetching page views:', error);
