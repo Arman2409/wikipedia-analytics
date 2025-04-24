@@ -23,6 +23,7 @@ export const validateAwsEnvironmentVariables = (): ArchiveCronValidationResult|v
             logger.warn(awsEnvMessages.MISSING_BUCKET_NAME);
         }
         
+        // Warn that cron job won't run
         logger.warn(awsEnvMessages.MISSING_AWS_ENV_FOR_ARCHIVE_CRON);
 
         return;

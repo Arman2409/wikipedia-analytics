@@ -3,6 +3,7 @@ import { CLICKED_BUTTON_CLASSLIST } from "../constants/constants";
 import store from "../state/store";
 import handleGetPageData from "../handlers/handlegetPageData";
 
+
 const { updateSelectedPeriod } = {...store }
 
 const periodsButtons = document.querySelectorAll('.period-btn');
@@ -16,6 +17,7 @@ periodsButtons.forEach((button) => {
             updateClickedButton(selectedPeriod);
             updateSelectedPeriod(selectedPeriod);
 
+            // Get page data
             handleGetPageData(selectedPeriod);
         }
     });
@@ -33,17 +35,18 @@ export function updateClickedButton(
 ) {
     const allPeriodButtons = document.querySelectorAll(".period-btn");
 
+    // Remove clicked button styles from other buttons 
     allPeriodButtons.forEach((button) => {
         CLICKED_BUTTON_CLASSLIST.forEach(className => {
             button.classList.remove(className);
         })
     });
 
-    const selectedPeriod = document.querySelector(`.period-btn[data-period="${period}"]`);
+    const selectedPeriodButton = document.querySelector(`.period-btn[data-period="${period}"]`);
 
-    if (selectedPeriod) {
+    if (selectedPeriodButton) {
         CLICKED_BUTTON_CLASSLIST.forEach(className => {
-            selectedPeriod.classList.add(className);
+            selectedPeriodButton.classList.add(className);
         })
     } else {
         console.error(`Button with data-period "${period}" not found.`);

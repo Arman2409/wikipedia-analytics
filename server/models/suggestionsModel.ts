@@ -1,5 +1,5 @@
 import { SUGGESTIONS_CACHE_PREFIX } from "../constants/configs";
-import { ErrorMessage, SuggestionsErrorMessages, StatusCode } from "../constants/response";
+import { ErrorMessages, SuggestionsErrorMessages, StatusCodes } from "../constants/response";
 import RequestHandler from "../services/request";
 import cache from "../services/cache";
 import logger from "../services/logger";
@@ -18,7 +18,7 @@ const getSuggestionsModel = async (
 
         if (cachedResult) {
             return {
-                status: StatusCode.OK,
+                status: StatusCodes.OK,
                 json: cachedResult,
             };
         }
@@ -28,9 +28,9 @@ const getSuggestionsModel = async (
 
         if (!result) {
             return {
-                status: StatusCode.NOT_FOUND,
+                status: StatusCodes.NOT_FOUND,
                 json: {
-                    error: ErrorMessage.RESOURCE_NOT_FOUND
+                    error: ErrorMessages.RESOURCE_NOT_FOUND
                 }
             };
         }
@@ -40,14 +40,14 @@ const getSuggestionsModel = async (
 
 
         return {
-            status: StatusCode.OK,
+            status: StatusCodes.OK,
             json: result
         }
     } catch (err) {
         logger.error(`${SuggestionsErrorMessages.FAILED_TO_GET_SUGGESTIONS}: ${err}`);
 
         return {
-            status: StatusCode.INTERNAL_SERVER_ERROR,
+            status: StatusCodes.INTERNAL_SERVER_ERROR,
             json: {
                 error: SuggestionsErrorMessages.FAILED_TO_GET_SUGGESTIONS
             }

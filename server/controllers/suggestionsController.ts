@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 
-import { SuggestionsErrorMessages, StatusCode } from "../constants/response";
+import { SuggestionsErrorMessages, StatusCodes } from "../constants/response";
 import logger from "../services/logger";
 import { handleGetSuggestionsQueryValidation } from "./utils/validation";
 import suggestionsModel from "../models/suggestionsModel";
@@ -24,7 +24,7 @@ const suggestionsController = async (
     } catch (err) {
         logger.error(SuggestionsErrorMessages.FAILED_TO_GET_SUGGESTIONS, err);
 
-        res.status(StatusCode.INTERNAL_SERVER_ERROR).json({
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             error: SuggestionsErrorMessages.FAILED_TO_GET_SUGGESTIONS
         });
     }

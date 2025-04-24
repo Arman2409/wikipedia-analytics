@@ -1,13 +1,13 @@
 import type { Request, Response } from 'express';
 
-import { ErrorMessage, StatusCode } from '../constants/response';
+import { ErrorMessages, StatusCodes } from '../constants/response';
 
 const notFoundMiddleware = (
     _: Request,
     res: Response,
 ): void => {
-    res.status(StatusCode.NOT_FOUND).json({
-        error: ErrorMessage.ROUTE_NOT_FOUND
+    res.status(StatusCodes.NOT_FOUND).json({
+        error: ErrorMessages.ROUTE_NOT_FOUND
     });
 }
 

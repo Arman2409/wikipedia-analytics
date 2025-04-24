@@ -17,7 +17,7 @@ class AwsService {
 
     private constructor() {
 
-        // Validated environment variables 
+        // Validate environment variables 
         const validationResult = validateAwsEnvironmentVariables();
 
         if (validationResult) {

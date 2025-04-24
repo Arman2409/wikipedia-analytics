@@ -1,5 +1,5 @@
 import { PAGE_VIEW_CACHE_PREFIX } from "../constants/configs";
-import { ErrorMessage, ViewsErrorMessages, StatusCode } from "../constants/response";
+import { ErrorMessages, ViewsErrorMessages, StatusCodes } from "../constants/response";
 import RequestHandler from "../services/request";
 import cache from "../services/cache";
 import logger from "../services/logger";
@@ -19,7 +19,7 @@ const viewsModel = async (
 
         if (cachedResult) {
             return {
-                status: StatusCode.OK,
+                status: StatusCodes.OK,
                 json: cachedResult
             }
         }
@@ -29,9 +29,9 @@ const viewsModel = async (
 
         if (!result?.items) {
             return {
-                status: StatusCode.NOT_FOUND,
+                status: StatusCodes.NOT_FOUND,
                 json: {
-                    error: ErrorMessage.RESOURCE_NOT_FOUND
+                    error: ErrorMessages.RESOURCE_NOT_FOUND
                 }
             }
         }
@@ -44,14 +44,14 @@ const viewsModel = async (
 
 
         return {
-            status: StatusCode.OK,
+            status: StatusCodes.OK,
             json: data
         }
     } catch (err) {
         logger.error(`${ViewsErrorMessages.FAILED_TO_GET_VIEWS}: ${err}`);
 
         return {
-            status: StatusCode.INTERNAL_SERVER_ERROR,
+            status: StatusCodes.INTERNAL_SERVER_ERROR,
             json: {
                 error: ViewsErrorMessages.FAILED_TO_GET_VIEWS
             }

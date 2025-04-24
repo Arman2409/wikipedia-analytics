@@ -11,10 +11,12 @@ export const transformPageViews = (
 ): PageViewsResponse => {
   const granularity = periodsMap.get(period as Period);
 
-  if(data .length % 2 !== 0) {
+  // Check if excessive data was received 
+  if (data.length % 2 !== 0) {
     data.shift();
   }
 
+  // Cut into two parts for previous and current data 
   const previousData = data.splice(0, data.length / 2);
 
   if (!granularity) {
@@ -42,7 +44,7 @@ function getLabelsAndViews(
 
   if (granularity === "weekly") {
     while (data.length > 0) {
-      const currArr = data.splice(0, 6);
+      const currArr = data.splice(0, 7);
 
       if (currArr[0]?.timestamp && currArr[currArr.length - 1]?.timestamp) {
         const weekStart = formatTimestamp(currArr[0]?.timestamp, "daily");

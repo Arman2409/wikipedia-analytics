@@ -13,6 +13,7 @@ if (aws.getIsValidated()) {
 
   cron.schedule(CRON_JOB_FREQUENCY, async () => {
     try {
+      // Get all the data from cache as string JSON
       const cachedData = await cache.getAll(false);
   
       if (isNonEmptyString(cachedData)) {

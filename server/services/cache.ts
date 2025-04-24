@@ -151,6 +151,7 @@ class RedisClient {
 
                 return result;
             } else {
+                // Construct a string JSON 
                 let stringJson: string = "{";
 
                 keys.forEach((key, index) => {

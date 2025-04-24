@@ -1,4 +1,4 @@
-export enum StatusCode {
+export enum StatusCodes {
     OK = 200,
     CREATED = 201,
     NO_CONTENT = 204,
@@ -7,7 +7,7 @@ export enum StatusCode {
     INTERNAL_SERVER_ERROR = 500,
 }
 
-export enum ErrorMessage {
+export enum ErrorMessages {
     SERVER_ERROR = "Something went wrong. Please try again later.",
     ROUTE_NOT_FOUND = "Route not found",
     RESOURCE_NOT_FOUND = "Resource not found",

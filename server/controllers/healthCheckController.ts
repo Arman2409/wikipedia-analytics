@@ -1,13 +1,13 @@
 import type { Request, Response } from "express";
 
-import { StatusCode } from "../constants/response";
+import { StatusCodes } from "../constants/response";
 
 
 const healthCheckController = (
     _: Request,
     res: Response) => {
 
-    res.status(StatusCode.OK).json({
+    res.status(StatusCodes.OK).json({
         info: "Server running!"
     })
 }
