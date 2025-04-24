@@ -1,6 +1,5 @@
 import { MAIN_PAGE_KEY } from "../constants/constants";
 
-// TODO make any to unknown 
 export const debounce = <T extends (...args: any[]) => void>(func: T, wait: number): (
   ...args: Parameters<T>
 ) => void => {

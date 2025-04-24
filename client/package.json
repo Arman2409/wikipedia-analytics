@@ -10,7 +10,7 @@
     "build:js": "tsup",
     "build:js:dev": "tsup --watch",
     "copy:static": "cp index.html ./dist/index.html && cp -r ./assets ./dist/assets",
-    "build": "npm run prebuild && npm run copy:static && npm run build:tailwind && npm run build:js",
+    "build": "npm run prebuild && npm run copy:static && npm run build:css && npm run build:js",
     "typecheck": "tsc"
   },
   "peerDependencies": {
