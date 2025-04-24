@@ -20,14 +20,14 @@ const barChart = new Chart(canvasElement, {
     data: {
         labels: [],
         datasets: [{
-            label: 'Previous value',
+            label: 'Previous page views',
             data: [],
             backgroundColor: chartColors.previousBar,
             borderColor: chartColors.border,
             borderWidth: CHART_BORDER_WIDTH
         },
         {
-            label: 'Current value',
+            label: 'Current page views',
             data: [],
             backgroundColor: chartColors.currentBar,
             borderColor: chartColors.border,

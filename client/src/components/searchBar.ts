@@ -18,6 +18,11 @@ const updateSuggestions = debounce(async (query: string) => {
 
     // Retrieve the suggestions from the Wikipedia API 
     const suggestions = await RequestHandler.getPageSuggestions(query);
+
+    if (!suggestions) {
+      return;
+    }
+
     suggestionsList.innerHTML = '';
     if (suggestions.length === 0) {
         suggestionsList.classList.add('hidden');
@@ -31,8 +36,8 @@ const updateSuggestions = debounce(async (query: string) => {
         li.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer';
         li.textContent = suggestion;
         li.addEventListener('click', () => {
+            // Get data from API 
             handleGetPageData(undefined, suggestion);
-
 
             pageSearch.value = suggestion;
             updateSelectedPage(suggestion)

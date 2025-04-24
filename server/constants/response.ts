@@ -8,10 +8,20 @@ export enum StatusCode {
 }
 
 export enum ErrorMessage {
-    WRONG_GET_VIEWS_QUERY_PARAMS = "Wrong query parameter type for 'period' or 'name'",
-    MISSING_GET_VIEWS_QUERY_PARAMS = "Missing query parameter: 'period' or 'name'",
     SERVER_ERROR = "Something went wrong. Please try again later.",
-    FAILED_TO_GET_VIEWS = "Failed to retrieve page views",
     ROUTE_NOT_FOUND = "Route not found",
     RESOURCE_NOT_FOUND = "Resource not found",
+}
+
+export enum GetViewsErrorMessages {
+    WRONG_GET_VIEWS_QUERY_PARAMS = "Wrong query parameter type for 'period' or 'name'",
+    MISSING_GET_VIEWS_QUERY_PARAMS = "Missing query parameter: 'period' or 'name'",
+    FAILED_TO_GET_VIEWS = "Failed to retrieve page views",
+}
+
+
+export enum GetSuggestionsErrorMessages {
+    WRONG_GET_SUGGESTIONS_QUERY_PARAMS = "Wrong query parameter type for 'page'",
+    MISSING_GET_SUGGESTION_QUERY_PARAMS = "Missing 'page' query parameter",
+    FAILED_TO_GET_SUGGESTIONS = "Failed to retrieve page views",
 }

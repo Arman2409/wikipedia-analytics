@@ -4,7 +4,7 @@ import RequestHandler from '../services/request';
 import LocalStorageCacheHandler from '../services/cache';
 import store from "../state/store";
 import { updateChart } from "../components/barChart";
-import { toggleLoading } from '../components/loading';
+import { toggleLoading } from '../components/shared/loading';
 import type { PageViewsResponse } from "../types/global";
 
 
@@ -18,11 +18,11 @@ const handleGetPageData = async (
 ) => {
     try {
         toggleLoading(true);
-
+ 
         if (!selectedPage) selectedPage = getSelectedPage();
         if (!selectedPeriod) selectedPeriod = getSelectedPeriod();
 
-        let result: PageViewsResponse;
+        let result: PageViewsResponse | null;
 
         // Check if the requested data is available in cache, otherwise send a request
         const cachedResult = cache.get<PageViewsResponse>(selectedPage, selectedPeriod);
@@ -32,11 +32,17 @@ const handleGetPageData = async (
         } else {
             result = await RequestHandler.getPageData(selectedPage, selectedPeriod);
 
-            cache.set(selectedPage, result, selectedPeriod);
+            if (result) {
+                cache.set(selectedPage, result, selectedPeriod);
+            }
         }
 
-        // Update the chart 
-        processGetPageResult(result, selectedPage, updateChart)
+        if (result) {
+            // Update the chart 
+            processGetPageResult(result, selectedPage, updateChart)
+        } else {
+            toggleLoading(false);
+        }
     } catch (error) {
         console.error('Error handling period change:', error);
     }

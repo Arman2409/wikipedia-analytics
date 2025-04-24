@@ -1,9 +1,10 @@
 import type { Response } from "express";
 
-import { ErrorMessage, StatusCode } from "../../constants/response";
+import { GetSuggestionsErrorMessages, GetViewsErrorMessages, StatusCode } from "../../constants/response";
 import { isNonEmptyString, isPositiveInteger } from "../../utils/typeGuards";
 import { periodsMap } from "./data";
-import type { GetPageViewsDto, Period } from "../../types/getViews";
+import type { GetPageViewsDto, Period } from "../../types/views";
+import type { GetSuggestionsDto } from "../../types/suggestions";
 
 
 export const handleGetViewsQueryValidation = (
@@ -15,18 +16,18 @@ export const handleGetViewsQueryValidation = (
 
     if (!period || !name) {
         res.status(StatusCode.BAD_REQUEST).json({
-            error: ErrorMessage.MISSING_GET_VIEWS_QUERY_PARAMS
+            error: GetViewsErrorMessages.MISSING_GET_VIEWS_QUERY_PARAMS
         });
         return;
     }
 
     if (!isPositiveInteger(period) || !isNonEmptyString(name)) {
         res.status(StatusCode.BAD_REQUEST).json(
-            { error: ErrorMessage.WRONG_GET_VIEWS_QUERY_PARAMS }
+            { error: GetViewsErrorMessages.WRONG_GET_VIEWS_QUERY_PARAMS }
         );
         return;
     }
-   
+
     // Get granularity by the period 
     const granularity = periodsMap.get(period as Period);
 
@@ -38,4 +39,29 @@ export const handleGetViewsQueryValidation = (
     }
 
     return { granularity, period: period as Period, name };
+}
+
+export const handleGetSuggestionsQueryValidation = (
+    query: Record<string, unknown>,
+    res: Response): GetSuggestionsDto | undefined => {
+
+    const { page } = query;
+     console.log([{page}]);
+     
+
+    if (!page) {
+        res.status(StatusCode.BAD_REQUEST).json({
+            error: GetSuggestionsErrorMessages.MISSING_GET_SUGGESTION_QUERY_PARAMS
+        });
+        return;
+    }
+
+    if (!isNonEmptyString(page)) {
+        res.status(StatusCode.BAD_REQUEST).json({
+            error: GetSuggestionsErrorMessages.WRONG_GET_SUGGESTIONS_QUERY_PARAMS
+        });
+        return;
+    }
+
+    return { page };
 }

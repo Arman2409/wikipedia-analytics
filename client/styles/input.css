@@ -4,15 +4,13 @@
 
 @theme {
     --color-primary: #a2d4fc;
-
     --color-secondary: #495a9f;
-
     --color-background: #FAFAFA;
 
-    --color-text :#a7d12f;
-
-    --color-accent: #ffda25;
+    --color-text: #739e24;       
+    --color-accent: #c7a518;  
 }
+
 
 /* Custom styles */
 

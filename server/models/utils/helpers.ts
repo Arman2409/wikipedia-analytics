@@ -1,16 +1,20 @@
-import { periodsMap } from '../../controllers/utils/data';
+import { granularityDays, periodsMap } from '../../controllers/utils/data';
 import logger from '../../services/logger';
-import type { ChartData, PageViewsItem, PageViewsResponse, Period } from '../../types/getViews';
+import type { ChartData, Granularity, PageViewsItem, PageViewsResponse, Period } from '../../types/views';
 
 
 export const transformPageViews = (
   data: PageViewsItem[],
   period: number
 ): PageViewsResponse => {
-  
-  const previousData = data.splice(0, period);
-
   const granularity = periodsMap.get(period as Period);
+
+  const daysCount = granularityDays.get(granularity as Granularity);
+
+  const cutRepeatance = period / Number(daysCount);
+
+  const previousData = data.splice(0, data.length / 2);
+
 
   if (!granularity) {
     logger.error("Period not allowed. Allowed periods are: ", Array.from(periodsMap.keys()).join(", "));
@@ -27,27 +31,28 @@ export const transformPageViews = (
 };
 
 function getLabelsAndViews(
-  data: PageViewsItem[], 
+  data: PageViewsItem[],
   granularity: string
 ): ChartData {
   const labels: string[] = [];
   const views: number[] = [];
 
-  if(granularity === "weekly") {
-    while(data.length > 0) {
+  if (granularity === "weekly") {
+    while (data.length > 0) {
       const currArr = data.splice(0, 6);
 
-      const weekStart = formatTimestamp(currArr[0]?.timestamp, "daily");
-      const weekEnd = formatTimestamp(currArr[currArr.length - 1]?.timestamp, "daily");
+      if (currArr[0]?.timestamp && currArr[currArr.length - 1]?.timestamp) {
+        const weekStart = formatTimestamp(currArr[0]?.timestamp, "daily");
+        const weekEnd = formatTimestamp(currArr[currArr.length - 1]?.timestamp as string, "daily");
 
-      const timeStamp = `${weekStart} - ${weekEnd}`;
-      let sum = 0;
+        const timeStamp = `${weekStart} - ${weekEnd}`;
+        let sum = 0;
 
-      data.forEach(({ views }) => sum += views);
+        data.forEach(({ views }) => sum += views);
 
-      labels.push(timeStamp);
-      views.push(sum);
-      
+        labels.push(timeStamp);
+        views.push(sum);
+      }
     }
   } else {
     data.forEach((item) => {
@@ -66,17 +71,18 @@ function formatTimestamp(
   timestamp: string,
   granularity: string
 ): string {
-  
+
   if (granularity === 'daily') {
 
     const day = parseInt(timestamp.slice(6, 8), 10);
-    
-    return String(day);
-  } else if (granularity === 'weekly') {
+    const month = parseInt(timestamp.slice(4, 6), 10);
 
-    const day = parseInt(timestamp.slice(6, 8), 10);
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-    return String(day);
+    const formattedDate = `${day} ${monthNames[month - 1]}`;
+
+    return formattedDate;
   } else if (granularity === 'monthly') {
 
     const month = parseInt(timestamp.slice(4, 6), 10) - 1;

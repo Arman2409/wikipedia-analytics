@@ -1,12 +1,12 @@
 import type { Request, Response } from "express";
 
-import { ErrorMessage, StatusCode } from "../constants/response";
+import { GetViewsErrorMessages, StatusCode } from "../constants/response";
 import logger from "../services/logger";
-import getViewsModel from "../models/getViewsModel";
+import viewsModel from "../models/viewsModel";
 import { handleGetViewsQueryValidation } from "./utils/validation";
 
 
-const getViewsController = async (
+const viewsController = async (
     req: Request,
     res: Response) => {
 
@@ -18,14 +18,16 @@ const getViewsController = async (
             return;
         }
 
-        getViewsModel(validationResult, res);
+        const {status, json} = await viewsModel(validationResult, res);
+
+        res.status(status).json(json);
     } catch (err) {
-        logger.error(ErrorMessage.FAILED_TO_GET_VIEWS, err);
+        logger.error(GetViewsErrorMessages.FAILED_TO_GET_VIEWS, err);
 
         res.status(StatusCode.INTERNAL_SERVER_ERROR).json({
-            error: ErrorMessage.FAILED_TO_GET_VIEWS
+            error: GetViewsErrorMessages.FAILED_TO_GET_VIEWS
         });
     }
 }
 
-export default getViewsController;
+export default viewsController;

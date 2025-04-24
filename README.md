@@ -7,7 +7,7 @@ The Wikipedia Analytics is a web application that displays page view statistics 
 
 ## Prerequisites
 
-- **Node.js and NPM**: Required for running the app. Version 18 or higher recommended for Node.js.
+- **Node.js and NPM**: Required for running the app. Version 22 or higher recommended for Node.js.
 - **Git**: For cloning and managing the repository.
 - **Redis**: For server-side caching.
 

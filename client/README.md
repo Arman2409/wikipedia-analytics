@@ -59,9 +59,8 @@ client/
 - `npm run copy:static`: Copies `index.html` and `assests` to `dist` folder.
 - `npm run build:js`: Builds the TypeScript code using TSUP.
 - `npm run build:js:dev`: Builds the TypeScript code with watch mode for development.
-- `npm run build:tailwind`: Compiles Tailwind CSS to `dist/styles/bundle.css`.
-- `npm run build:tailwind:dev`: Compiles Tailwind CSS with watch mode for development.
-- `npm run prebuild:tailwind`: Creates the `dist/styles` directory for CSS output.
+- `npm run build:css`: Compiles Tailwind CSS to `dist/styles/bundle.css`.
+- `npm run build:css:dev`: Compiles Tailwind CSS with watch mode for development.
 - `npm run typecheck`: Implements TypeScript checking.
 
 

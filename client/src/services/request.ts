@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance } from 'axios';
 
-import { WIKIPEDIA_API_URL } from '../constants/configs';
 import type { PageViewsResponse } from '../types/global';
+import { showSnackbar } from '../components/shared/snackbar';
 
 
 interface RequestHandler {
@@ -30,7 +30,7 @@ class RequestHandler {
     async getPageData(
         name: string,
         period: string
-    ): Promise<PageViewsResponse> {
+    ): Promise<PageViewsResponse | null> {
         try {
             // Construct the query params 
             const getViewParams = new URLSearchParams();
@@ -38,37 +38,34 @@ class RequestHandler {
             getViewParams.set("period", period);
 
             const result = await this.axiosInstance.get(`/get_views?${getViewParams}`)
-            
+           
+            console.log("here");
+            // showSnackbar("Hello World")
+
             return result.data;
         } catch (error) {
             console.error('Error fetching page views:', error);
+            showSnackbar((error as Error)?.message || 'Error fetching page views', "error")
 
-            return {
-                current: {
-                    labels: [],
-                    views: []
-                },
-                previous: {
-                    labels: [],
-                    views: []
-                }
-            };
+            return null;
         }
     }
 
     async getPageSuggestions(
         query: string
-    ): Promise<string[]> {
+    ): Promise<string[] | null>{
         try {
-            const response = await axios.get(
-                WIKIPEDIA_API_URL + `?action=opensearch&search=${encodeURIComponent(query)}&limit=10&namespace=0&format=json&origin=*`
-            );
+            // Construct the query params 
+            const getSuggestionsParams = new URLSearchParams();
+            getSuggestionsParams.set("page", query);
 
-            return response.data[1]; // Array of page titles
+            const response = await this.axiosInstance.get(`/get_suggestions?${getSuggestionsParams}`);
+
+            return response.data;
         } catch (error) {
-            console.error('Error fetching suggestions:', error);
-
-            return [];
+            showSnackbar((error as Error)?.message || 'Error fetching page views', "error")
+            
+            return null;
         }
     }
 }

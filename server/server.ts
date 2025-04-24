@@ -6,8 +6,9 @@ import { DEFAULT_PORT } from "./constants/configs";
 import logger from "./services/logger";
 import loggingMiddleware from "./middlewares/loggingMiddleware";
 import notFoundMiddleware from "./middlewares/notFoundMiddleware";
-import getViewsController from "./controllers/getViewsController";
 import healthCheckController from "./controllers/healthCheckController";
+import viewsController from "./controllers/viewsController";
+import suggestionsController from "./controllers/suggestionsController";
 
 
 // Set up
@@ -21,7 +22,8 @@ app.use(loggingMiddleware);
 
 // Routes
 app.get("/", healthCheckController);
-app.get("/get_views", getViewsController);
+app.get("/get_views", viewsController);
+app.get("/get_suggestions", suggestionsController);
 
 
 // Catch-all middleware

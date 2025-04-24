@@ -40,4 +40,13 @@ export const getPageName = (name: string) => {
 }
 
 
+export const sliceString = (
+  str: string, 
+  length: number, 
+  ): string => {
+  if (typeof str !== 'string') return '';
 
+  if(str.length <= length) return str;
+
+  return str.slice(0, length) + '...';
+}

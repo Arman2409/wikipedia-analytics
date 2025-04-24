@@ -1,7 +1,9 @@
 import { INITIAL_SELECTED_PERIOD } from "../constants/configs";
 import { CLICKED_BUTTON_CLASSLIST } from "../constants/constants";
+import store from "../state/store";
 import handleGetPageData from "../handlers/handlegetPageData";
 
+const { updateSelectedPeriod } = {...store }
 
 const periodsButtons = document.querySelectorAll('.period-btn');
 
@@ -12,6 +14,7 @@ periodsButtons.forEach((button) => {
 
         if (selectedPeriod) {
             updateClickedButton(selectedPeriod);
+            updateSelectedPeriod(selectedPeriod);
 
             handleGetPageData(selectedPeriod);
         }
