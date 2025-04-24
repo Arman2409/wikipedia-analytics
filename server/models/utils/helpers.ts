@@ -2,6 +2,8 @@ import { granularityDays, periodsMap } from '../../controllers/utils/data';
 import logger from '../../services/logger';
 import type { ChartData, Granularity, PageViewsItem, PageViewsResponse, Period } from '../../types/views';
 
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export const transformPageViews = (
   data: PageViewsItem[],
@@ -9,9 +11,9 @@ export const transformPageViews = (
 ): PageViewsResponse => {
   const granularity = periodsMap.get(period as Period);
 
-  const daysCount = granularityDays.get(granularity as Granularity);
-
-  const cutRepeatance = period / Number(daysCount);
+  if(data .length % 2 !== 0) {
+    data.shift();
+  }
 
   const previousData = data.splice(0, data.length / 2);
 
@@ -77,17 +79,14 @@ function formatTimestamp(
     const day = parseInt(timestamp.slice(6, 8), 10);
     const month = parseInt(timestamp.slice(4, 6), 10);
 
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
     const formattedDate = `${day} ${monthNames[month - 1]}`;
 
     return formattedDate;
   } else if (granularity === 'monthly') {
 
-    const month = parseInt(timestamp.slice(4, 6), 10) - 1;
+    const month = parseInt(timestamp.slice(4, 6), 10);
 
-    return String(month);
+    return monthNames[month - 1] + " " + timestamp.slice(0, 4);
   }
 
   return "";
