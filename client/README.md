@@ -28,7 +28,7 @@ BASE_API_URL=your-api-url
 npm run build
 ```
 
-4. Open the ./dist/index.html file in your web browser to view the application.
+4. Open the ./dist/index.html file in your web browser using the Live Server extension or similiar tools(to avoid CORS errors).
 
 
 ## Directory Structure
